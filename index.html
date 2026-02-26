@@ -628,6 +628,56 @@
     gap: 16px;
   }
 
+  .screenshot-item img {
+    cursor: zoom-in;
+    transition: opacity 0.2s;
+  }
+
+  .screenshot-item img:hover {
+    opacity: 0.85;
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0,0,0,0.92);
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    padding: 32px;
+  }
+
+  .lightbox.open {
+    display: flex;
+  }
+
+  .lightbox img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    box-shadow: 0 0 80px rgba(0,0,0,0.8);
+    cursor: zoom-out;
+  }
+
+  .lightbox-close {
+    position: fixed;
+    top: 24px;
+    right: 32px;
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    z-index: 1001;
+  }
+
+  .lightbox-close:hover { color: rgba(255,255,255,0.9); }
+
   .screenshot-caption-title {
     font-size: 15px;
     font-weight: 500;
@@ -1427,22 +1477,22 @@ step_stddev  = annual_stddev <span class="hl">/ sqrt(12)</span>
     <h2>Results you can<br><em>read and verify</em></h2>
     <div class="screenshot-grid">
       <div class="screenshot-item">
-        <img src="screenshot-ci.jpeg" alt="Run Overview panel showing survival probability, Wilson 95% CI, and trial quality label" style="width:100%;display:block;border:1px solid var(--border);">
+        <img src="screenshot-ci.jpeg" alt="Run Overview panel showing survival probability, Wilson 95% CI, and trial quality label" style="width:100%;display:block;border:1px solid var(--border);" onclick="openLightbox(this)">
         <div class="screenshot-caption-title">Confidence interval on every result</div>
         <div class="screenshot-caption-body">Survival probability with Wilson 95% CI bounds and a half-width expressed in percentage points. You always know how much to trust the estimate.</div>
       </div>
       <div class="screenshot-item">
-        <img src="screenshot-fanchart.jpeg" alt="Fan chart showing p10, p50 and p90 portfolio paths from age 66 to 100" style="width:100%;display:block;border:1px solid var(--border);">
+        <img src="screenshot-fanchart.jpeg" alt="Fan chart showing p10, p50 and p90 portfolio paths from age 66 to 100" style="width:100%;display:block;border:1px solid var(--border);" onclick="openLightbox(this)">
         <div class="screenshot-caption-title">p10 / p50 / p90 across the full horizon</div>
         <div class="screenshot-caption-body">The fan chart makes uncertainty visible — upside, median, and downside at every age checkpoint, from retirement through end age.</div>
       </div>
       <div class="screenshot-item">
-        <img src="screenshot-distribution.jpeg" alt="Ending balance distribution showing p10, p50, p90 with plain-English labels" style="width:100%;display:block;border:1px solid var(--border);">
+        <img src="screenshot-distribution.jpeg" alt="Ending balance distribution showing p10, p50, p90 with plain-English labels" style="width:100%;display:block;border:1px solid var(--border);" onclick="openLightbox(this)">
         <div class="screenshot-caption-title">Plain-English ending balance distribution</div>
         <div class="screenshot-caption-body">Every label is written out — "90% of runs ended above this" rather than bare percentile notation. The distribution is immediately readable.</div>
       </div>
       <div class="screenshot-item">
-        <img src="screenshot-mathtransparency.jpeg" alt="Math Transparency block and path checkpoint table showing formulas and worked example" style="width:100%;display:block;border:1px solid var(--border);">
+        <img src="screenshot-mathtransparency.jpeg" alt="Math Transparency block and path checkpoint table showing formulas and worked example" style="width:100%;display:block;border:1px solid var(--border);" onclick="openLightbox(this)">
         <div class="screenshot-caption-title">Math transparency — auditable by design</div>
         <div class="screenshot-caption-body">Every run documents the locked formulas, operation order, and a worked example with your actual inputs substituted in. Not a black box.</div>
       </div>
@@ -1684,7 +1734,29 @@ half-width = <span class="hl">±0.06 percentage points</span>
     document.querySelectorAll('.features-panels > div').forEach(p => p.classList.remove('active'));
     document.getElementById(tabId).classList.add('active');
   }
+
+  function openLightbox(img) {
+    const lb = document.getElementById('lightbox');
+    document.getElementById('lightbox-img').src = img.src;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+  });
 </script>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox" onclick="closeLightbox()">
+  <div class="lightbox-close" onclick="closeLightbox()">esc / click to close</div>
+  <img id="lightbox-img" src="" alt="Screenshot enlarged">
+</div>
 
 </body>
 </html>
