@@ -156,6 +156,35 @@
 
   .nav-cta:hover { opacity: 0.85; }
 
+  .nav-cta.disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .btn-coming-soon {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 16px 36px;
+    text-transform: uppercase;
+    display: inline-block;
+    cursor: default;
+  }
+
+  .coming-soon-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.06em;
+    line-height: 1.7;
+    margin-top: 16px;
+  }
+
   /* ── HERO ── */
   .hero {
     position: relative;
@@ -1273,7 +1302,7 @@
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
-  <a href="#pricing" class="nav-cta">Buy — $79</a>
+  <a href="#pricing" class="nav-cta disabled">Coming Soon</a>
 </nav>
 
 <!-- HERO -->
@@ -1292,11 +1321,15 @@
         <span class="pill">macOS + Windows + Linux soon</span>
       </div>
       <div class="hero-buy">
-        <a href="{{LEMON_SQUEEZY_URL}}" class="btn-primary">Buy &amp; Download — $79</a>
+        <div class="btn-coming-soon">Purchase link coming soon</div>
         <div class="price-note">
           <strong>$79</strong>
           One-time · launch price
         </div>
+      </div>
+      <div class="coming-soon-note">
+        Checkout pending app listing approval. Purchase link goes live immediately after.<br>
+        Built for people who don't trust black boxes.
       </div>
     </div>
 
@@ -1706,10 +1739,10 @@ half-width = <span class="hl">±0.06 percentage points</span>
           <li>Free updates within v1.x</li>
           <li>Email support</li>
         </ul>
-        <a href="{{LEMON_SQUEEZY_URL}}" class="btn-buy">Buy on Lemon Squeezy →</a>
+        <div class="btn-coming-soon" style="width:100%;text-align:center;">Purchase link coming soon →</div>
         <div class="pricing-note">
-          Introductory price for early adopters.<br>
-          Future price: $129. Offline activation. No subscription.
+          Checkout pending app listing approval — purchase link goes live immediately after.<br>
+          Introductory price for early adopters. Future price: $129. Offline activation. No subscription.
         </div>
       </div>
     </div>
@@ -1764,7 +1797,9 @@ half-width = <span class="hl">±0.06 percentage points</span>
   <ul class="footer-links">
     <li><a href="{{SUPPORT_EMAIL}}">Support</a></li>
     <li><a href="#faq">FAQ</a></li>
-    <li><a href="{{LEMON_SQUEEZY_URL}}">Buy</a></li>
+    <li><a href="#pricing">Coming Soon</a></li>
+    <li><a href="https://stillwardlabs.com/legal.html">Terms of Service</a></li>
+    <li><a href="https://stillwardlabs.com/legal.html#refund">Refund Policy</a></li>
   </ul>
   <div class="footer-disclaimer">
     Retirement Risk Lab is a statistical simulation tool for scenario analysis and planning support. Outputs are probability estimates under stated assumptions, not guarantees or investment advice. Past market behavior does not guarantee future results.
