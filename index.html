@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Risk Lab — Offline Monte Carlo Retirement Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0e0f11;
+    --bg2: #141518;
+    --bg3: #1a1c20;
+    --border: rgba(255,255,255,0.07);
+    --border-bright: rgba(255,255,255,0.14);
+    --text: #e8e4dc;
+    --text-dim: #8a8680;
+    --text-dimmer: #4a4845;
+    --accent: #c8a96e;
+    --accent-dim: rgba(200,169,110,0.15);
+    --accent-glow: rgba(200,169,110,0.08);
+    --green: #5d9e7a;
+    --red: #b85c5c;
+    --blue: #5b88b8;
+    --mono: 'DM Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+    --serif: 'Playfair Display', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Grid texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 20px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(14,15,17,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 13px;
+    color: var(--text-dim);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 9px 20px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+  }
+
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 140px 48px 80px;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(200,169,110,0.05) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(91,136,184,0.04) 0%, transparent 60%);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .hero-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .hero-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(38px, 4vw, 58px);
+    font-weight: 400;
+    line-height: 1.12;
+    letter-spacing: -0.01em;
+    margin-bottom: 12px;
+    color: var(--text);
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 18px;
+    font-weight: 300;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 460px;
+  }
+
+  .hero-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 48px;
+  }
+
+  .pill {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    border: 1px solid var(--border-bright);
+    padding: 5px 12px;
+    text-transform: uppercase;
+  }
+
+  .hero-buy {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 16px 36px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: opacity 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .price-note {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.4;
+  }
+
+  .price-note strong {
+    display: block;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    font-family: var(--sans);
+  }
+
+  /* ── HERO CHART MOCKUP ── */
+  .hero-visual {
+    position: relative;
+  }
+
+  .app-frame {
+    background: var(--bg2);
+    border: 1px solid var(--border-bright);
+    border-radius: 2px;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,0.5),
+      0 40px 80px rgba(0,0,0,0.5),
+      0 0 120px rgba(200,169,110,0.04);
+  }
+
+  .app-titlebar {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #febc2e; }
+  .dot-g { background: #28c840; }
+
+  .app-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    margin-left: 8px;
+    letter-spacing: 0.06em;
+  }
+
+  .app-content {
+    padding: 20px;
+  }
+
+  .results-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* Fake chart SVG area */
+  .chart-area {
+    width: 100%;
+    height: 200px;
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .chart-area svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Stats row */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .stat-cell {
+    background: var(--bg2);
+    padding: 12px 14px;
+  }
+
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .stat-value {
+    font-family: var(--mono);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .stat-value.green { color: var(--green); }
+  .stat-value.amber { color: var(--accent); }
+
+  .stat-sub {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dimmer);
+    margin-top: 2px;
+  }
+
+  /* CI bar */
+  .ci-bar {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .ci-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .ci-value {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+  }
+
+  .quality-badge {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--green);
+    padding: 3px 8px;
+  }
+
+  /* ── SECTION COMMON ── */
+  section {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  h2 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  /* ── DIFFERENTIATORS ── */
+  .diff-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .diff-item {
+    padding: 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.3s;
+  }
+
+  .diff-item:nth-child(2n) { border-right: none; }
+  .diff-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .diff-item:hover {
+    background: var(--accent-glow);
+  }
+
+  .diff-number {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.15em;
+    margin-bottom: 20px;
+  }
+
+  .diff-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+
+  .diff-body {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .diff-tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(200,169,110,0.3);
+    padding: 3px 8px;
+    margin-top: 16px;
+  }
+
+  /* ── FEATURES ── */
+  .features-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .features-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 80px;
+    margin-top: 60px;
+    align-items: start;
+  }
+
+  .features-nav {
+    position: sticky;
+    top: 100px;
+  }
+
+  .feature-tab {
+    display: block;
+    padding: 16px 20px;
+    border-left: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+  }
+
+  .feature-tab:hover, .feature-tab.active {
+    border-left-color: var(--accent);
+    background: var(--accent-glow);
+  }
+
+  .feature-tab-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+    transition: color 0.2s;
+  }
+
+  .feature-tab:hover .feature-tab-title,
+  .feature-tab.active .feature-tab-title {
+    color: var(--text);
+  }
+
+  .feature-tab-sub {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+  }
+
+  .features-panels > div {
+    display: none;
+  }
+
+  .features-panels > div.active {
+    display: block;
+  }
+
+  .feature-panel {
+    background: var(--bg2);
+    border: 1px solid var(--border-bright);
+    padding: 40px;
+  }
+
+  .feature-panel-title {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  .feature-panel-body {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  .code-block {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 20px 24px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.8;
+    overflow-x: auto;
+  }
+
+  .code-block .hl { color: var(--accent); }
+  .code-block .gr { color: var(--green); }
+  .code-block .bl { color: var(--blue); }
+
+  .feature-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .feature-list li {
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    line-height: 1.5;
+  }
+
+  .feature-list li::before {
+    content: '→';
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* ── SCREENSHOTS ── */
+  .screenshots-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .screenshot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+    background: var(--border);
+  }
+
+  .screenshot-item {
+    background: var(--bg2);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .screenshot-caption-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .screenshot-caption-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── MATH TRANSPARENCY DEMO ── */
+  .math-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .math-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .math-copy h2 {
+    margin-bottom: 20px;
+  }
+
+  .math-copy p {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .math-terminal {
+    background: var(--bg);
+    border: 1px solid var(--border-bright);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    line-height: 1.9;
+    overflow: hidden;
+  }
+
+  .terminal-bar {
+    background: var(--bg3);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .terminal-title {
+    font-size: 10px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.08em;
+  }
+
+  .terminal-body {
+    padding: 20px 24px;
+    color: var(--text-dim);
+  }
+
+  .terminal-body .hl  { color: var(--accent); }
+  .terminal-body .gr  { color: var(--green); }
+  .terminal-body .bl  { color: var(--blue); }
+  .terminal-body .dim { color: var(--text-dimmer); }
+
+  /* ── PRIVACY ── */
+  .privacy-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .privacy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .privacy-item {
+    background: var(--bg);
+    padding: 32px 28px;
+  }
+
+  .privacy-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .privacy-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .privacy-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ── PRICING ── */
+  .pricing-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .pricing-card {
+    max-width: 540px;
+    margin: 60px auto 0;
+    border: 1px solid var(--border-bright);
+    background: var(--bg);
+    box-shadow: 0 0 60px rgba(200,169,110,0.06);
+  }
+
+  .pricing-header {
+    padding: 36px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .pricing-name {
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .pricing-desc {
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+
+  .pricing-amount {
+    text-align: right;
+  }
+
+  .pricing-price {
+    font-family: var(--mono);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  .pricing-period {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .pricing-body {
+    padding: 32px 40px;
+  }
+
+  .pricing-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+
+  .pricing-features li {
+    font-size: 14px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pricing-features li::before {
+    content: '✓';
+    color: var(--accent);
+    font-family: var(--mono);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+
+  .btn-buy {
+    display: block;
+    width: 100%;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 18px;
+    text-align: center;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn-buy:hover { opacity: 0.9; }
+
+  .pricing-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    text-align: center;
+    letter-spacing: 0.06em;
+    margin-top: 16px;
+    line-height: 1.6;
+  }
+
+  /* ── FAQ ── */
+  .faq-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  .faq-item {
+    padding: 36px 40px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .faq-item:nth-child(2n) { border-right: none; }
+  .faq-item:nth-last-child(-n+2) { border-bottom: none; }
+
+  .faq-q {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+
+  .faq-a {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  .faq-a code {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    background: var(--accent-dim);
+    padding: 1px 5px;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .footer-logo {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .footer-links a {
+    font-size: 12px;
+    color: var(--text-dimmer);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--text-dim); }
+
+  .footer-disclaimer {
+    font-size: 11px;
+    color: var(--text-dimmer);
+    width: 100%;
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: 24px;
+    margin-top: 8px;
+  }
+
+  /* ── VIDEO PLACEHOLDER ── */
+  .video-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .video-wrapper {
+    margin-top: 60px;
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid var(--border-bright);
+    background: var(--bg3);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4), 0 0 80px rgba(200,169,110,0.04);
+  }
+
+  .video-placeholder {
+    width: 100%;
+    aspect-ratio: 16/9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(200,169,110,0.06) 0%, transparent 70%);
+  }
+
+  .play-btn {
+    width: 64px;
+    height: 64px;
+    border: 2px solid var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+  }
+
+  .video-placeholder:hover .play-btn {
+    background: var(--accent-dim);
+    transform: scale(1.05);
+  }
+
+  .play-btn::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 18px solid var(--accent);
+    margin-left: 4px;
+  }
+
+  .video-label {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── FOR WHO ── */
+  .forwho-section {
+    padding: 100px 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .forwho-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 60px;
+  }
+
+  .forwho-card {
+    padding: 36px;
+    border: 1px solid var(--border);
+  }
+
+  .forwho-card.yes {
+    border-color: rgba(93,158,122,0.3);
+    background: rgba(93,158,122,0.03);
+  }
+
+  .forwho-card.no {
+    border-color: rgba(184,92,92,0.2);
+    background: rgba(184,92,92,0.02);
+  }
+
+  .forwho-heading {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .forwho-heading.yes { color: var(--green); }
+  .forwho-heading.no { color: var(--red); }
+
+  .forwho-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .forwho-list li {
+    font-size: 14px;
+    color: var(--text-dim);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .forwho-list.yes li::before { content: '→'; color: var(--green); font-family: var(--mono); flex-shrink: 0; }
+  .forwho-list.no li::before { content: '×'; color: var(--red); font-family: var(--mono); flex-shrink: 0; }
+
+  /* ── ACTIVATION ── */
+  .activation-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .activation-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 1px solid var(--border);
+    margin-top: 48px;
+  }
+
+  .activation-step {
+    padding: 32px 28px;
+    border-right: 1px solid var(--border);
+    position: relative;
+  }
+
+  .activation-step:last-child { border-right: none; }
+
+  .step-number {
+    font-family: var(--mono);
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--text-dimmer);
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .step-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .step-body {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-inner > * {
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero-inner > *:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  /* responsive */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 120px 24px 60px; }
+    .hero-inner { grid-template-columns: 1fr; gap: 48px; }
+    .section-inner { padding: 0 24px; }
+    .diff-grid { grid-template-columns: 1fr; }
+    .diff-item { border-right: none; }
+    .features-layout { grid-template-columns: 1fr; }
+    .features-nav { position: static; display: flex; overflow-x: auto; gap: 0; }
+    .feature-tab { flex-shrink: 0; border-left: none; border-bottom: 2px solid var(--border); padding: 12px 16px; }
+    .math-inner { grid-template-columns: 1fr; gap: 40px; }
+    .privacy-grid { grid-template-columns: 1fr 1fr; }
+    .faq-grid { grid-template-columns: 1fr; }
+    .faq-item { border-right: none; }
+    .forwho-grid { grid-template-columns: 1fr; }
+    .activation-steps { grid-template-columns: 1fr 1fr; }
+    .activation-step:nth-child(2) { border-right: none; }
+    .screenshot-grid { grid-template-columns: 1fr; }
+    footer { padding: 32px 24px; flex-direction: column; }
+    .pricing-header { flex-direction: column; gap: 16px; }
+    .pricing-amount { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Retirement Risk Lab</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#pricing" class="nav-cta">Buy — $79</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <div class="hero-label">Monte Carlo Retirement Simulator</div>
+      <h1>Private.<br><em>Deterministic.</em><br>Yours.</h1>
+      <p class="hero-sub">Offline retirement simulation for analytical DIY planners who want to see the math, reproduce results, and audit every assumption.</p>
+      <div class="hero-pills">
+        <span class="pill">No account</span>
+        <span class="pill">No cloud</span>
+        <span class="pill">No telemetry</span>
+        <span class="pill">Fixed-seed reproducibility</span>
+        <span class="pill">macOS + Windows + Linux soon</span>
+      </div>
+      <div class="hero-buy">
+        <a href="{{LEMON_SQUEEZY_URL}}" class="btn-primary">Buy &amp; Download — $79</a>
+        <div class="price-note">
+          <strong>$79</strong>
+          One-time · launch price
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="app-frame">
+        <div class="app-titlebar">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="app-title">Retirement Risk Lab</span>
+        </div>
+        <div class="app-content">
+          <div class="results-label">Results — Run Overview</div>
+          <div class="stat-grid">
+            <div class="stat-cell">
+              <div class="stat-label">Survival probability</div>
+              <div class="stat-value green">70.59%</div>
+              <div class="stat-sub">to age 100</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-label">Depletion prob.</div>
+              <div class="stat-value" style="color:var(--red)">29.41%</div>
+              <div class="stat-sub">before age 100</div>
+            </div>
+            <div class="stat-cell">
+              <div class="stat-label">Trial quality</div>
+              <div class="stat-value amber">good</div>
+              <div class="stat-sub">2,000,000 trials</div>
+            </div>
+          </div>
+          <div class="ci-bar">
+            <span class="ci-label">Wilson 95% CI (survival)</span>
+            <span class="ci-value">70.5233% → 70.6496%</span>
+            <span class="quality-badge">±0.06 pp</span>
+          </div>
+          <div class="chart-area" style="margin-top:16px;">
+            <svg viewBox="0 0 500 180" preserveAspectRatio="none">
+              <!-- grid lines -->
+              <line x1="0" y1="45" x2="500" y2="45" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="90" x2="500" y2="90" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <line x1="0" y1="135" x2="500" y2="135" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+              <!-- p90 line - rising -->
+              <polyline points="0,140 60,130 120,118 180,104 240,88 300,72 360,54 420,36 500,18"
+                fill="none" stroke="#b85c5c" stroke-width="1.5" opacity="0.85"/>
+              <!-- p50 line - flat-ish -->
+              <polyline points="0,145 60,143 120,141 180,140 240,140 300,141 360,139 420,138 500,137"
+                fill="none" stroke="#5b88b8" stroke-width="1.5" opacity="0.85"/>
+              <!-- p10 line - declining -->
+              <polyline points="0,148 60,152 120,155 180,158 240,162 300,165 360,168 420,172 500,176"
+                fill="none" stroke="#5d9e7a" stroke-width="1.5" opacity="0.85"/>
+              <!-- labels -->
+              <text x="8" y="14" fill="#b85c5c" font-family="monospace" font-size="9" opacity="0.9">p90</text>
+              <text x="8" y="133" fill="#5b88b8" font-family="monospace" font-size="9" opacity="0.9">p50</text>
+              <text x="8" y="173" fill="#5d9e7a" font-family="monospace" font-size="9" opacity="0.9">p10</text>
+              <!-- age axis -->
+              <text x="0" y="178" fill="rgba(255,255,255,0.2)" font-family="monospace" font-size="8">66</text>
+              <text x="230" y="178" fill="rgba(255,255,255,0.2)" font-family="monospace" font-size="8">83</text>
+              <text x="475" y="178" fill="rgba(255,255,255,0.2)" font-family="monospace" font-size="8">100</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section class="video-section" id="demo">
+  <div class="section-inner">
+    <div class="section-label">See it in action</div>
+    <h2>90 seconds.<br>The full picture.</h2>
+    <div class="video-wrapper">
+      <div class="video-placeholder" onclick="this.innerHTML='<iframe width=\'100%\' height=\'100%\' src=\'{{VIDEO_EMBED_URL}}?autoplay=1\' frameborder=\'0\' allowfullscreen style=\'position:absolute;inset:0;width:100%;height:100%;\'></iframe>'; this.style.aspectRatio='auto';">
+        <div class="play-btn"></div>
+        <div class="video-label">Watch demo — 90 sec</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENTIATORS -->
+<section class="diff-section" id="features">
+  <div class="section-inner">
+    <div class="section-label">Why it's different</div>
+    <h2>Built for planners who<br><em>want to verify</em> the math</h2>
+    <div class="diff-grid">
+      <div class="diff-item">
+        <div class="diff-number">01</div>
+        <div class="diff-title">Deterministic fixed-seed runs</div>
+        <div class="diff-body">Set a seed and get identical results every run on the same build. Change one assumption, rerun, and you know exactly what moved and why. Most tools give you a different number each time with no way to isolate changes.</div>
+        <span class="diff-tag">Reproducibility</span>
+      </div>
+      <div class="diff-item">
+        <div class="diff-number">02</div>
+        <div class="diff-title">Wilson 95% CI and trial quality label</div>
+        <div class="diff-body">Every result shows a confidence interval around the survival estimate and a precision label: good, fair, or low confidence. You know how much to trust the number you're looking at. No other consumer retirement tool shows this.</div>
+        <span class="diff-tag">Statistical rigor</span>
+      </div>
+      <div class="diff-item">
+        <div class="diff-number">03</div>
+        <div class="diff-title">Math transparency output</div>
+        <div class="diff-body">Every run produces a full transparency block: the exact formulas, locked operation order, monthly conversion equations, and a worked example with your actual inputs substituted in. You can audit exactly what the engine computed.</div>
+        <span class="diff-tag">Auditability</span>
+      </div>
+      <div class="diff-item">
+        <div class="diff-number">04</div>
+        <div class="diff-title">Saved run artifacts and compare workflow</div>
+        <div class="diff-body">Save scenarios and run outputs as versioned JSON files. Load two runs and see B − A deltas instantly — no rerunning, no manually diffing numbers. Schema-versioned so files remain readable across releases.</div>
+        <span class="diff-tag">Workflow</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES TABBED -->
+<section class="features-section">
+  <div class="section-inner">
+    <div class="section-label">Feature detail</div>
+    <h2>Everything in the<br>current baseline</h2>
+    <div class="features-layout">
+      <div class="features-nav">
+        <a class="feature-tab active" onclick="switchTab(event,'tab-sim')">
+          <div class="feature-tab-title">Simulation engine</div>
+          <div class="feature-tab-sub">Monte Carlo core</div>
+        </a>
+        <a class="feature-tab" onclick="switchTab(event,'tab-outputs')">
+          <div class="feature-tab-title">Outputs &amp; metrics</div>
+          <div class="feature-tab-sub">Results panel</div>
+        </a>
+        <a class="feature-tab" onclick="switchTab(event,'tab-workflow')">
+          <div class="feature-tab-title">Analysis workflow</div>
+          <div class="feature-tab-sub">Goal seek · Compare · Export</div>
+        </a>
+        <a class="feature-tab" onclick="switchTab(event,'tab-artifacts')">
+          <div class="feature-tab-title">Scenario &amp; run artifacts</div>
+          <div class="feature-tab-sub">Save · Load · Schema</div>
+        </a>
+        <a class="feature-tab" onclick="switchTab(event,'tab-license')">
+          <div class="feature-tab-title">Offline licensing</div>
+          <div class="feature-tab-sub">No network · No binding</div>
+        </a>
+      </div>
+
+      <div class="features-panels">
+        <div id="tab-sim" class="feature-panel active">
+          <div class="feature-panel-title">Simulation engine</div>
+          <div class="feature-panel-body">Normal return model with a locked RNG stack and deterministic seeding. Annual and monthly timestep modes with locked monthly conversion formulas. The step order is fixed and documented in every run output.</div>
+          <div class="code-block">
+<span class="dim">// RNG stack</span>
+<span class="hl">xoshiro256**</span> + SplitMix64 seeding + Box-Muller normal
+
+<span class="dim">// Monthly conversion (locked)</span>
+step_mean    = (1 + annual_mean)<span class="hl">^(1/12)</span> - 1
+step_stddev  = annual_stddev <span class="hl">/ sqrt(12)</span>
+
+<span class="dim">// Operation order per step (locked)</span>
+<span class="gr">contribution → return draw → clamp → apply</span>
+<span class="gr">→ withdrawals → social security → depletion check</span>
+          </div>
+        </div>
+
+        <div id="tab-outputs" class="feature-panel">
+          <div class="feature-panel-title">Outputs and metrics</div>
+          <div class="feature-panel-body">Every run produces a full results panel covering survival probability, confidence interval, ending balance distribution, depletion timing, and a complete math transparency block.</div>
+          <ul class="feature-list">
+            <li>Survival and depletion probability to four decimal places</li>
+            <li>Wilson 95% CI for both survival and depletion estimates</li>
+            <li>Trial quality label based on CI half-width</li>
+            <li>p10 / p50 / p90 / min ending balances with plain-English labels</li>
+            <li>Failed trial count and median depletion age</li>
+            <li>Monthly depletion month (monthly mode, when failures exist)</li>
+            <li>Fan chart — p10/p50/p90 path percentiles over time</li>
+            <li>Path table — same data as checkpoints, toggle from chart</li>
+            <li>Math transparency block with worked example</li>
+          </ul>
+        </div>
+
+        <div id="tab-workflow" class="feature-panel">
+          <div class="feature-panel-title">Analysis workflow</div>
+          <div class="feature-panel-body">Tools for iterating toward a plan: goal seek to target a success probability, compare mode to isolate assumption changes, and CSV export for downstream analysis.</div>
+          <ul class="feature-list">
+            <li>Goal seek: target success % and adjust spending or Social Security</li>
+            <li>Fast goal-seek mode: get recommendation without full render, then run final simulation</li>
+            <li>Compare two run artifacts: structured B − A delta summary</li>
+            <li>Compare fan chart: visual overlay when both runs include path data</li>
+            <li>Export path table to CSV (single run or compare mode)</li>
+            <li>Assumption warnings panel for aggressive or inconsistent inputs</li>
+          </ul>
+        </div>
+
+        <div id="tab-artifacts" class="feature-panel">
+          <div class="feature-panel-title">Scenario and run artifacts</div>
+          <div class="feature-panel-body">All inputs and outputs are saveable as versioned JSON files. Schema contracts are validated in CI on every release so your saved files remain readable across versions.</div>
+          <ul class="feature-list">
+            <li>Save scenario (inputs only) — schema <code>retire-risk.scenario v2</code></li>
+            <li>Load scenario — validated on import with explicit error codes</li>
+            <li>Save run artifact (inputs + full outputs + seed + conventions) — schema <code>retire-risk.run v2</code></li>
+            <li>Load run artifact without rerunning</li>
+            <li>Legacy v1 run snapshot files remain loadable</li>
+            <li>CLI runner for headless / scripted execution</li>
+          </ul>
+        </div>
+
+        <div id="tab-license" class="feature-panel">
+          <div class="feature-panel-title">Offline licensing</div>
+          <div class="feature-panel-body">License verification uses an embedded Ed25519 public key. No network calls are made for activation or validation. No machine binding. No expiration logic.</div>
+          <ul class="feature-list">
+            <li>Activate by importing license file or pasting JSON in-app</li>
+            <li>No network required — works fully in airplane mode</li>
+            <li>No machine binding — use on your own machines</li>
+            <li>No expiration — valid for the major version you purchased</li>
+            <li>License stored locally: <code>%APPDATA%\RetirementRiskLab\</code> or <code>~/Library/Application Support/RetirementRiskLab/</code></li>
+            <li>Remove license and reset local state at any time</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section class="screenshots-section" id="screenshots">
+  <div class="section-inner">
+    <div class="section-label">Inside the app</div>
+    <h2>Results you can<br><em>read and verify</em></h2>
+    <div class="screenshot-grid">
+      <div class="screenshot-item">
+        <img src="screenshot-ci.jpeg" alt="Run Overview panel showing survival probability, Wilson 95% CI, and trial quality label" style="width:100%;display:block;border:1px solid var(--border);">
+        <div class="screenshot-caption-title">Confidence interval on every result</div>
+        <div class="screenshot-caption-body">Survival probability with Wilson 95% CI bounds and a half-width expressed in percentage points. You always know how much to trust the estimate.</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="screenshot-fanchart.jpeg" alt="Fan chart showing p10, p50 and p90 portfolio paths from age 66 to 100" style="width:100%;display:block;border:1px solid var(--border);">
+        <div class="screenshot-caption-title">p10 / p50 / p90 across the full horizon</div>
+        <div class="screenshot-caption-body">The fan chart makes uncertainty visible — upside, median, and downside at every age checkpoint, from retirement through end age.</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="screenshot-distribution.jpeg" alt="Ending balance distribution showing p10, p50, p90 with plain-English labels" style="width:100%;display:block;border:1px solid var(--border);">
+        <div class="screenshot-caption-title">Plain-English ending balance distribution</div>
+        <div class="screenshot-caption-body">Every label is written out — "90% of runs ended above this" rather than bare percentile notation. The distribution is immediately readable.</div>
+      </div>
+      <div class="screenshot-item">
+        <img src="screenshot-mathtransparency.jpeg" alt="Math Transparency block and path checkpoint table showing formulas and worked example" style="width:100%;display:block;border:1px solid var(--border);">
+        <div class="screenshot-caption-title">Math transparency — auditable by design</div>
+        <div class="screenshot-caption-body">Every run documents the locked formulas, operation order, and a worked example with your actual inputs substituted in. Not a black box.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MATH TRANSPARENCY DEEP DIVE -->
+<section class="math-section" id="methodology">
+  <div class="math-inner">
+    <div class="math-copy">
+      <div class="section-label">Methodology</div>
+      <h2>Locked conventions.<br><em>Visible math.</em></h2>
+      <p>Every simulation parameter is documented and every formula is shown with your actual inputs substituted in. The Math Transparency section is not a summary — it is the full derivation.</p>
+      <p>Monthly conversion formulas, operation order, Wilson CI calculation, and percentile method are all locked, versioned, and included in every saved run artifact.</p>
+      <p>This is the difference between a number and a reproducible result.</p>
+    </div>
+    <div class="math-terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div>
+        <div class="dot dot-y"></div>
+        <div class="dot dot-g"></div>
+        <span class="terminal-title">Math Transparency (v1) — current run</span>
+      </div>
+      <div class="terminal-body">
+<span class="dim">Operation order per step:</span>
+<span class="gr">contribution → return draw → clamp → apply</span>
+<span class="gr">→ withdrawals → social security → depletion check</span>
+
+<span class="dim">Annual → monthly step conversion:</span>
+step_mean   = (1+<span class="hl">0.057900</span>)^(1/12)-1 = <span class="hl">0.470150%</span>
+step_stddev = <span class="hl">0.120000</span> / sqrt(12) = <span class="hl">3.464102%</span>
+
+<span class="dim">Worked example — first retirement step:</span>
+illustrative_B_pre     = <span class="hl">1,198,321.37</span>
+B_after_return         = <span class="hl">1,203,955.28</span>
+spending_step          = <span class="hl">7,500.00</span>
+social_security_step   = <span class="hl">4,299.00</span>
+illustrative_B_end     = <span class="hl">1,200,754.28</span>
+
+<span class="dim">Wilson 95% CI:</span>
+p_hat = 1411729 / 2000000 = <span class="hl">70.5864%</span>
+CI    = [<span class="gr">70.5233%</span>, <span class="gr">70.6496%</span>]
+half-width = <span class="hl">±0.06 percentage points</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOR WHO / NOT FOR WHO -->
+<section class="forwho-section">
+  <div class="section-inner">
+    <div class="section-label">Who it's for</div>
+    <h2>A simulation lab,<br>not a sales funnel</h2>
+    <div class="forwho-grid">
+      <div class="forwho-card yes">
+        <div class="forwho-heading yes">✓ Built for</div>
+        <ul class="forwho-list yes">
+          <li>Engineers and analytically-minded DIY investors who want to understand the model</li>
+          <li>Bogleheads-style planners who care about assumptions and methodology transparency</li>
+          <li>Privacy-sensitive users who don't want retirement data in a cloud database</li>
+          <li>Spreadsheet modelers who want reproducible, comparable runs</li>
+          <li>Anyone who has read a retirement calculator result and wondered "how confident should I be in this number?"</li>
+        </ul>
+      </div>
+      <div class="forwho-card no">
+        <div class="forwho-heading no">× Not built for</div>
+        <ul class="forwho-list no">
+          <li>One-click answers without needing to understand assumptions</li>
+          <li>Full tax-law bracket modeling or Roth conversion optimization</li>
+          <li>Multi-account aggregation or brokerage account linking</li>
+          <li>Advisor-client management or presentation generation</li>
+          <li>Historical bootstrap or sequence-of-returns replay (on the roadmap)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRIVACY -->
+<section class="privacy-section">
+  <div class="section-inner">
+    <div class="section-label">Privacy</div>
+    <h2>Your data stays<br><em>on your machine</em></h2>
+    <div class="privacy-grid">
+      <div class="privacy-item">
+        <span class="privacy-icon">⬡</span>
+        <div class="privacy-title">No account required</div>
+        <div class="privacy-body">Download, install, and run. No email, no login, no profile.</div>
+      </div>
+      <div class="privacy-item">
+        <span class="privacy-icon">⬡</span>
+        <div class="privacy-title">No network calls</div>
+        <div class="privacy-body">Simulation and license verification both run fully offline. Works in airplane mode.</div>
+      </div>
+      <div class="privacy-item">
+        <span class="privacy-icon">⬡</span>
+        <div class="privacy-title">No telemetry</div>
+        <div class="privacy-body">No usage analytics, no crash reporting to a remote server, no tracking of any kind.</div>
+      </div>
+      <div class="privacy-item">
+        <span class="privacy-icon">⬡</span>
+        <div class="privacy-title">No cloud dependency</div>
+        <div class="privacy-body">Your scenarios and run artifacts are local JSON files. No server to go down, no subscription to lapse.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ACTIVATION -->
+<section class="activation-section">
+  <div class="section-inner">
+    <div class="section-label">Getting started</div>
+    <h2>Up and running<br>in four steps</h2>
+    <div class="activation-steps">
+      <div class="activation-step">
+        <div class="step-number">01</div>
+        <div class="step-title">Purchase on Lemon Squeezy</div>
+        <div class="step-body">One-time payment. You'll receive a download link and your license file by email.</div>
+      </div>
+      <div class="activation-step">
+        <div class="step-number">02</div>
+        <div class="step-title">Download for your platform</div>
+        <div class="step-body">macOS, Windows x64, and Windows ARM64 builds included. Linux coming soon.</div>
+      </div>
+      <div class="activation-step">
+        <div class="step-number">03</div>
+        <div class="step-title">Activate offline</div>
+        <div class="step-body">File → Enter License → Import the license file we send you. No network needed.</div>
+      </div>
+      <div class="activation-step">
+        <div class="step-number">04</div>
+        <div class="step-title">Load baseline and run</div>
+        <div class="step-body">Click Load Baseline, set your assumptions, and run your first simulation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="section-inner">
+    <div class="section-label" style="justify-content:center;">Pricing</div>
+    <h2 style="text-align:center;">One price.<br><em>Everything included.</em></h2>
+    <div class="pricing-card">
+      <div class="pricing-header">
+        <div>
+          <div class="pricing-name">Retirement Risk Lab</div>
+          <div class="pricing-desc">Personal license · macOS + Windows</div>
+        </div>
+        <div class="pricing-amount">
+          <div class="pricing-price">$79</div>
+          <div class="pricing-period">One-time · launch price</div>
+        </div>
+      </div>
+      <div class="pricing-body">
+        <ul class="pricing-features">
+          <li>macOS, Windows x64, and Windows ARM64 downloads — Linux coming soon, free to existing buyers</li>
+          <li>Full simulation: annual and monthly timestep modes</li>
+          <li>Wilson CI, trial quality, Math Transparency on every run</li>
+          <li>Goal seek, compare runs, fan chart, path table, CSV export</li>
+          <li>Scenario and run artifact save/load (versioned JSON schemas)</li>
+          <li>Offline license activation — no network, no machine binding</li>
+          <li>Free updates within v1.x</li>
+          <li>Email support</li>
+        </ul>
+        <a href="{{LEMON_SQUEEZY_URL}}" class="btn-buy">Buy on Lemon Squeezy →</a>
+        <div class="pricing-note">
+          Introductory price for early adopters.<br>
+          Future price: $129. Offline activation. No subscription.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section" id="faq">
+  <div class="section-inner">
+    <div class="section-label">FAQ</div>
+    <h2>Common questions</h2>
+    <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Can I reproduce an exact result?</div>
+        <div class="faq-a">Yes. Set <code>Seed Mode = fixed</code> and the same seed value and you'll get bit-identical results on the same build and platform. Cross-platform differences can occur due to floating-point behavior.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it require an internet connection?</div>
+        <div class="faq-a">No. Simulation and license verification both run fully offline. There are no network calls anywhere in the app. It works in airplane mode.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What are the tax and RMD assumptions?</div>
+        <div class="faq-a">Tax rate, RMD start age/rate, and healthcare cost are simplified placeholders for directional stress testing. They are not a full tax-law engine. A complete tax module is a planned future feature.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Why did the run get blocked?</div>
+        <div class="faq-a">If trials × timestep × horizon would exceed safe path-memory limits for percentile output, the run is blocked with <code>RR_ERR_TRIALS_OUT_OF_RANGE</code>. The fix is to reduce trial count, especially in monthly mode with long horizons.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Does it use historical return sequences?</div>
+        <div class="faq-a">Not yet. The current engine uses a parametric normal return model. Historical bootstrap and sequence-of-returns replay are planned and will be added if demand supports it.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What is the license model?</div>
+        <div class="faq-a">One-time purchase, offline Ed25519-signed license file, no machine binding, no expiration, no network calls. Valid for all v1.x releases. Activate by importing the license file or pasting JSON in-app.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Is this financial advice?</div>
+        <div class="faq-a">No. Retirement Risk Lab is a statistical simulation tool for scenario analysis and planning support. Outputs are probability estimates under stated assumptions, not guarantees or financial recommendations.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What platforms are supported?</div>
+        <div class="faq-a">macOS and Windows (x64 and ARM64). All three builds are included with your purchase. A Linux build is in progress and will be distributed to existing buyers at no extra charge when available.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Retirement Risk Lab</div>
+  <ul class="footer-links">
+    <li><a href="{{SUPPORT_EMAIL}}">Support</a></li>
+    <li><a href="#faq">FAQ</a></li>
+    <li><a href="{{LEMON_SQUEEZY_URL}}">Buy</a></li>
+  </ul>
+  <div class="footer-disclaimer">
+    Retirement Risk Lab is a statistical simulation tool for scenario analysis and planning support. Outputs are probability estimates under stated assumptions, not guarantees or investment advice. Past market behavior does not guarantee future results.
+  </div>
+</footer>
+
+<script>
+  function switchTab(e, tabId) {
+    e.preventDefault();
+    // update nav
+    document.querySelectorAll('.feature-tab').forEach(t => t.classList.remove('active'));
+    e.currentTarget.classList.add('active');
+    // update panels
+    document.querySelectorAll('.features-panels > div').forEach(p => p.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+  }
+</script>
+
+</body>
+</html>
