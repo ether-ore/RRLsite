@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retirement Risk Lab — User Manual</title>
+<meta name="description" content="Official user manual for Retirement Risk Lab.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=Playfair+Display:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0f11;
+  --bg2: #141518;
+  --bg3: #1a1c20;
+  --border: rgba(255,255,255,0.07);
+  --border-bright: rgba(255,255,255,0.14);
+  --text: #e8e4dc;
+  --text-dim: #8a8680;
+  --text-dimmer: #4a4845;
+  --accent: #c8a96e;
+  --accent-glow: rgba(200,169,110,0.08);
+  --mono: 'DM Mono', monospace;
+  --sans: 'DM Sans', sans-serif;
+  --serif: 'Playfair Display', serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(14,15,17,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.nav-link {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  text-decoration: none;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.nav-link:hover { color: var(--text); }
+
+.main {
+  position: relative;
+  z-index: 1;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 42px 28px 70px;
+}
+
+.manual-card {
+  background: var(--bg2);
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  padding: 34px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+}
+
+.manual-card h1 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.manual-card h2 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 400;
+  margin-top: 36px;
+  margin-bottom: 14px;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.manual-card h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 22px;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.manual-card h4 {
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 18px;
+  margin-bottom: 10px;
+  color: var(--text);
+}
+
+.manual-card p {
+  margin: 12px 0;
+  color: var(--text);
+}
+
+.manual-card ul,
+.manual-card ol {
+  margin: 10px 0 14px 22px;
+}
+
+.manual-card li {
+  margin: 6px 0;
+  color: var(--text);
+}
+
+.manual-card hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 20px 0;
+}
+
+.manual-card code {
+  font-family: var(--mono);
+  font-size: 0.93em;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.12em 0.38em;
+  color: var(--accent);
+}
+
+.manual-card pre {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  overflow-x: auto;
+  margin: 14px 0;
+}
+
+.manual-card pre code {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--text);
+}
+
+.manual-card a {
+  color: #9fc3ff;
+}
+
+.manual-meta {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-top: -6px;
+  margin-bottom: 14px;
+}
+
+@media (max-width: 900px) {
+  nav { padding: 14px 18px; }
+  .main { padding: 24px 14px 36px; }
+  .manual-card { padding: 22px 18px; }
+  .manual-card h2 { font-size: 24px; }
+}
+
+/* PDF-friendly: single-flow export with no forced page breaks */
+@media print {
+  body { background: #fff; color: #111; }
+  body::before { display: none; }
+  nav { display: none; }
+  .main { max-width: none; margin: 0; padding: 0; }
+  .manual-card { box-shadow: none; border: 0; border-radius: 0; padding: 0; }
+  .manual-card * { break-inside: auto; page-break-inside: auto; }
+  [style*="page-break-after"] { display: none !important; }
+}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Retirement Risk Lab</a>
+  <a class="nav-link" href="index.html">Back To Site</a>
+</nav>
+<main class="main">
+  <article class="manual-card">
+    <div class="manual-meta">User Manual • Styled HTML Export</div>
+    <h1 id="retirement-risk-lab-user-manual">Retirement Risk Lab User Manual</h1>
+<p>Version: 2026-03-02<br />
+Scope: <code>v1.0.0</code> / Engine <code>1.0.0-engine2</code></p>
+<h2 id="why-retirement-risk-lab">Why Retirement Risk Lab?</h2>
+<hr />
+<p>When I retired in 2023 after years as Director of Development for a global manufacturing company, one of my wife and my Sunday rituals was &ldquo;doing the money.&rdquo; I&rsquo;d gather the latest balances for everything and use spreadsheet formulas to give my wife an update on how long our money might last - straight-line projections, rough assumptions, best I had.</p>
+<p>I knew it wasn&rsquo;t accurate. Our financial advisor had shown me output from a Monte Carlo simulator once, and it was reassuring - but things change fast, and I didn&rsquo;t want to depend on someone else for answers about our own financial situation.</p>
+<p>I&rsquo;d just spent a year and a half building a serious blackjack simulator - one that could run two million hands per second and produce deterministic, reproducible results. What I learned from that project was that I had a taste for that kind of rigor: if you&rsquo;re going to test something, you need to be confident that what you&rsquo;re testing is the only thing that can change.</p>
+<p>So I decided to build a Monte Carlo retirement simulator for myself. One I could trust, inspect, and run as many times as I wanted without bothering anyone.</p>
+<p>That&rsquo;s Retirement Risk Lab. This manual covers how to use it.</p>
+<h2 id="1-what-this-app-is">1) What this app is</h2>
+<p>Retirement Risk Lab is an offline Monte Carlo retirement simulator.</p>
+<p>It estimates the probability your portfolio survives from <code>current_age</code> through <code>end_age</code> under uncertain returns, inflation, spending, and optional income/expense assumptions.</p>
+<p>Core properties:</p>
+<ul>
+<li>Fully offline desktop app (no network needed for simulation)</li>
+<li>Deterministic fixed-seed runs for reproducibility</li>
+<li>Annual and monthly timesteps</li>
+<li>Scenario save/load, run artifact save/load, and run comparison</li>
+<li>In-app help and math transparency output</li>
+</ul>
+<h2 id="2-important-input-conventions">2) Important input conventions</h2>
+<p>Before using the app, lock these conventions:</p>
+<ul>
+<li>Money values are annual dollars.</li>
+<li>Percent values are entered as percentages, not decimals.</li>
+<li>Example: enter <code>5.79</code> for <code>5.79%</code> (not <code>0.0579</code>).</li>
+<li>Projection range is inclusive.</li>
+<li>Simulation runs from <code>current_age</code> through <code>end_age</code>, including both endpoints.</li>
+<li>Default mode is inflation-adjusted spending (real-dollar spending).</li>
+<li>Enable <code>Values are nominal</code> only if you want fixed-dollar spending.</li>
+<li>Avoid double-counting Medicare:</li>
+<li>If your Social Security input is already net of Medicare deductions, leave <code>Medicare Cost</code> as <code>0</code>.</li>
+<li>Use <code>Medicare Cost</code> only when your SS amount is gross and you want Medicare modeled as a separate drag.</li>
+</ul>
+<h2 id="3-screen-layout">3) Screen layout</h2>
+<p>The main window has two major areas:</p>
+<ol>
+<li>
+<p>Left panel (<code>Inputs</code>)
+- Core / Income / Advanced tabs
+- Simulation and goal-seek controls
+- File action buttons</p>
+</li>
+<li>
+<p>Right panel (<code>Results</code>)
+- HTML results report
+- Fan chart / Path table area</p>
+</li>
+</ol>
+<p>Menu bar:</p>
+<ul>
+<li>File: Load/Save Scenario, Run Simulation, Enter License, Save/Load Results, Compare Results</li>
+<li>View: Toggle Fan Chart/Path Table, Export Path CSV, Show Help Home, Show Latest Results</li>
+<li>Help: Quick Start, Features Guide, Path Table Guide, Monte Carlo Primer, Enter License</li>
+</ul>
+<h2 id="4-input-fields-and-meaning">4) Input fields and meaning</h2>
+<h3 id="41-core-tab">4.1 Core tab</h3>
+<ul>
+<li><code>Current Age</code>: starting age of simulation.</li>
+<li><code>Retirement Age</code>: age when spending phase starts.</li>
+<li><code>End Age</code>: final age horizon.</li>
+<li><code>Starting Balance</code>: portfolio value at start.</li>
+<li><code>Annual Contribution</code>: annual savings added <em>before</em> retirement age.</li>
+<li><code>Retirement Spending</code>: annual withdrawal target in retirement.</li>
+<li><code>Timestep</code>: <code>annual</code> (faster) or <code>monthly</code> (finer detail).</li>
+<li><code>Trials</code>: number of Monte Carlo trials.</li>
+<li><code>Values are nominal</code>: disables spending inflation adjustment.</li>
+</ul>
+<h3 id="42-income-tab">4.2 Income tab</h3>
+<ul>
+<li><code>Enable Social Security Income</code>: toggle Social Security cashflows.</li>
+<li><code>SS Start Age</code>: age Social Security starts.</li>
+<li><code>SS Annual Benefit</code>: annual Social Security amount.</li>
+<li>If this value is already net of Medicare deductions, leave <code>Medicare Cost = 0</code>.</li>
+<li>If this value is gross (before Medicare deductions), model Medicare separately using <code>Medicare Cost</code>.</li>
+<li><code>SS COLA (%)</code>: annual growth rate applied to SS benefit.</li>
+<li><code>Medicare Cost</code>: annual healthcare placeholder drag.</li>
+<li>If <code>SS Annual Benefit</code> is already net of Medicare deductions, keep <code>Medicare Cost = 0</code>.</li>
+<li>If <code>SS Annual Benefit</code> is gross, enter Medicare separately in <code>Medicare Cost</code>.</li>
+</ul>
+<h3 id="43-advanced-tab">4.3 Advanced tab</h3>
+<ul>
+<li><code>Mean Return (%)</code>: expected annual return assumption.</li>
+<li><code>Stddev (%)</code>: annual return volatility assumption.</li>
+<li><code>Inflation (%)</code>: annual inflation assumption.</li>
+<li><code>Tax Rate (%)</code>: withdrawal-tax placeholder rate.</li>
+<li><code>RMD Start Age</code>: age required minimum distribution placeholder starts.</li>
+<li><code>RMD Rate (%)</code>: RMD placeholder percentage.</li>
+<li><code>Seed Mode</code>: <code>fixed</code> or <code>random</code>.</li>
+<li><code>Seed</code>: seed value used when mode is fixed.</li>
+<li>In <code>random</code> mode, this field is disabled/ignored for input.</li>
+<li>After a random-mode run, app displays the actual seed used so you can reproduce the run later by switching to <code>fixed</code>.</li>
+</ul>
+<h2 id="5-recommended-first-run-workflow">5) Recommended first run workflow</h2>
+<p>Startup behavior:</p>
+<ul>
+<li>On app launch, Retirement Risk Lab automatically attempts to load baseline.</li>
+<li>If <code>baseline.json</code> is missing, app recreates it and continues.</li>
+<li>If baseline file cannot be written (for example, folder permissions), app still loads embedded baseline values in memory so first run can proceed.</li>
+<li>In normal startup, status line shows <code>Loaded baseline scenario.</code> and fields are pre-populated.</li>
+</ul>
+<ol>
+<li>Click <code>Load Baseline</code> (or load your own scenario).
+   - If baseline file is missing, app recreates it automatically.</li>
+<li>Confirm all fields use your intended units.</li>
+<li>Choose <code>Timestep</code>:
+- Annual for faster iteration
+- Monthly for more granular depletion timing</li>
+<li>Set <code>Trials</code> (start around 10,000 to 50,000 while iterating).</li>
+<li>Set <code>Seed Mode</code>:
+- <code>fixed</code> for apples-to-apples comparison runs
+- <code>random</code> for fresh draw stream each run</li>
+<li>Click <code>Run Simulation</code>.</li>
+<li>Review report sections in order:
+- Run Overview
+- Assumption Warnings
+- Ending Balance Distribution
+- Depletion Timing
+- Run Metadata
+- Math Transparency</li>
+<li>Review fan chart, then toggle <code>Show Path Table</code> for checkpoint detail.</li>
+</ol>
+<h2 id="6-how-to-read-results">6) How to read results</h2>
+<h3 id="61-run-overview">6.1 Run Overview</h3>
+<ul>
+<li>Survival probability: percent of trials not depleted before end age.</li>
+<li>Depletion probability: complement of survival probability.</li>
+<li>Wilson 95% CI: precision interval around survival estimate.</li>
+<li>Trial quality label: interpretation of CI width.</li>
+</ul>
+<h3 id="62-ending-balance-distribution">6.2 Ending Balance Distribution</h3>
+<ul>
+<li><code>p10</code>, <code>p50</code>, <code>p90</code>, and <code>min</code> refer to ending-balance percentiles.</li>
+<li>These are distribution points, not direct success probabilities.</li>
+</ul>
+<h3 id="63-depletion-timing">6.3 Depletion Timing</h3>
+<ul>
+<li>Shows percentile-path depletion markers where applicable.</li>
+<li><code>Median depletion age</code> summarizes failed trials only.</li>
+<li>In monthly mode, median depletion month is also reported (when failures exist).</li>
+</ul>
+<h3 id="64-run-metadata">6.4 Run Metadata</h3>
+<ul>
+<li>Seed used</li>
+<li>RNG identifier</li>
+<li>Elapsed runtime</li>
+</ul>
+<h3 id="65-assumption-warnings">6.5 Assumption Warnings</h3>
+<ul>
+<li>Non-blocking checks for suspicious assumption combinations.</li>
+<li>Warnings do not prevent execution; they flag potential modeling issues.</li>
+</ul>
+<h3 id="66-math-transparency">6.6 Math Transparency</h3>
+<p>Shows model formulas and convention text used in the run, including:</p>
+<ul>
+<li>Return distribution assumptions</li>
+<li>Monthly conversion conventions</li>
+<li>Operation order conventions</li>
+<li>Percentile method conventions</li>
+</ul>
+<h2 id="7-fan-chart-and-path-table">7) Fan chart and path table</h2>
+<ul>
+<li>Fan chart plots path percentiles (p10/p50/p90) by age checkpoint.</li>
+<li><code>Show Path Table</code> toggles to an amortization-style checkpoint table using the same underlying path percentiles.</li>
+<li><code>Export Path CSV...</code> exports current path table data (or compare-path table data in compare mode).</li>
+</ul>
+<h2 id="8-goal-seek-target-success">8) Goal seek (target success)</h2>
+<p>Controls:</p>
+<ul>
+<li><code>Target Success (%)</code></li>
+<li><code>Adjust By</code> (for example lower spending or raise retirement income)</li>
+<li><code>Find Target Mix</code></li>
+<li><code>Fast goal-seek (skip final chart run)</code></li>
+</ul>
+<p>Behavior:</p>
+<ul>
+<li>Normal mode runs seek iterations and final full run output.</li>
+<li>Fast mode returns recommendation quickly and skips final full rendering.</li>
+<li>After fast mode, click <code>Run Final Simulation</code> for full chart/table/report output.</li>
+<li><code>Raise retirement income</code> is implemented as an SS placeholder: the solver raises modeled <code>SS Annual Benefit</code> from <code>SS Start Age</code>; it does not create separate pre-SS bridge income.</li>
+</ul>
+<h2 id="9-scenario-and-results-files">9) Scenario and results files</h2>
+<h3 id="91-scenario-files">9.1 Scenario files</h3>
+<ul>
+<li><code>Save Scenario...</code> saves inputs only.</li>
+<li><code>Load Scenario...</code> loads inputs from JSON.</li>
+<li><code>Load Baseline</code> auto-recreates baseline JSON when missing, so baseline load does not fail due to missing file.</li>
+<li>Current schema: <code>retire-risk.scenario</code> v2.</li>
+<li>Default location behavior:</li>
+<li>Uses sibling <code>Scenarios/</code> next to the app executable/bundle when writable.</li>
+<li>Falls back to <code>Documents/RetirementRiskLab/Scenarios/</code> when app folder is not writable.</li>
+</ul>
+<h3 id="92-run-artifact-files">9.2 Run artifact files</h3>
+<ul>
+<li><code>Save Results...</code> saves scenario + run output as canonical run artifact.</li>
+<li><code>Load Results...</code> loads a prior run artifact into the UI.</li>
+<li><code>Compare Results...</code> loads run A and run B and shows <code>B - A</code> deltas.</li>
+<li>Current schema: <code>retire-risk.run</code> v2.</li>
+<li>Legacy <code>retire-risk.run-snapshot</code> v1 files remain loadable.</li>
+<li>Default location behavior:</li>
+<li>Uses sibling <code>Results/</code> next to the app executable/bundle when writable.</li>
+<li>Falls back to <code>Documents/RetirementRiskLab/Results/</code> when app folder is not writable.</li>
+</ul>
+<h2 id="10-help-system-in-app">10) Help system in app</h2>
+<p>The results panel can show built-in guides:</p>
+<ul>
+<li>Quick Start</li>
+<li>Features Guide</li>
+<li>Suggested Starting Assumptions</li>
+<li>Monte Carlo Primer</li>
+<li>Path Table Guide</li>
+</ul>
+<p>Use:</p>
+<ul>
+<li><code>View &gt; Show Help Home</code></li>
+<li><code>View &gt; Show Latest Results</code></li>
+</ul>
+<h2 id="11-licensing-behavior-app-side">11) Licensing behavior (app side)</h2>
+<p>License manager entry points:</p>
+<ul>
+<li><code>File &gt; Enter License...</code></li>
+<li><code>Help &gt; Enter License...</code></li>
+</ul>
+<p>Activation methods:</p>
+<ul>
+<li>Import license file</li>
+<li>Paste license JSON and validate</li>
+</ul>
+<p>Stored license location:</p>
+<ul>
+<li>Windows: <code>%APPDATA%\RetirementRiskLab\license.json</code></li>
+<li>macOS: <code>~/Library/Application Support/RetirementRiskLab/license.json</code></li>
+<li>Linux (experimental builds): <code>~/.config/RetirementRiskLab/license.json</code></li>
+</ul>
+<p>Enforcement mode is compile-time:</p>
+<ul>
+<li>SOFT: unlicensed users can run simulation with reminders/watermark behavior</li>
+<li>HARD: simulation blocked until valid license</li>
+</ul>
+<h2 id="12-troubleshooting">12) Troubleshooting</h2>
+<h3 id="121-rr_err_trials_out_of_range">12.1 <code>RR_ERR_TRIALS_OUT_OF_RANGE</code></h3>
+<p>Meaning:</p>
+<ul>
+<li>Path percentile output is too large for selected trials/timestep.</li>
+</ul>
+<p>Fix:</p>
+<ul>
+<li>Reduce <code>Trials</code>, especially in monthly mode and long horizons.</li>
+</ul>
+<h3 id="122-runs-feel-slow">12.2 Runs feel slow</h3>
+<ul>
+<li>Lower trials while iterating assumptions.</li>
+<li>Use annual mode during setup, then monthly for final detail.</li>
+<li>Use fast goal-seek for initial targeting.</li>
+</ul>
+<h3 id="123-compare-chart-unavailable">12.3 Compare chart unavailable</h3>
+<ul>
+<li>One or both run files do not include path output required for overlay chart.</li>
+<li>Compare summary metrics may still be available.</li>
+</ul>
+<h3 id="124-reproducibility-differences">12.4 Reproducibility differences</h3>
+<ul>
+<li>Fixed-seed runs are deterministic on the same build/platform.</li>
+<li>Cross-platform differences may occur from floating-point behavior.</li>
+</ul>
+<h3 id="125-window-geometry-persistence">12.5 Window geometry persistence</h3>
+<ul>
+<li>Known gap in current baseline: window size/position persistence can fail on both macOS and Windows.</li>
+<li>If this occurs, relaunch falls back to default window geometry.</li>
+</ul>
+<h3 id="126-app-blocked-on-first-launch-direct-download-builds">12.6 App blocked on first launch (direct download builds)</h3>
+<ul>
+<li>macOS:</li>
+<li>If Gatekeeper blocks first launch, Control-click the app, choose <code>Open</code>, then confirm.</li>
+<li>If needed, use <code>System Settings &gt; Privacy &amp; Security</code> and allow the blocked app.</li>
+<li>Windows:</li>
+<li>If SmartScreen warns on first launch, choose <code>More info</code> then <code>Run anyway</code> (only for your trusted build).</li>
+<li>Linux:</li>
+<li>Linux builds are currently experimental/deferred and not part of the baseline shipping targets.</li>
+<li>If you experiment with Linux builds, ensure required runtime libraries are installed for your distro.</li>
+<li>For licensing-enabled Linux builds, install <code>libsodium-dev</code> before compile so static crypto linkage succeeds.</li>
+<li>Placement:</li>
+<li>Prefer running from a user-writable folder.</li>
+<li>If app folder is not writable, scenario/results folders automatically fall back to <code>Documents/RetirementRiskLab</code>.</li>
+</ul>
+<h2 id="13-suggested-operating-discipline">13) Suggested operating discipline</h2>
+<ul>
+<li>Change one assumption block at a time.</li>
+<li>Keep seed fixed when comparing scenario variants.</li>
+<li>Increase trial count only after assumptions are stable.</li>
+<li>Save key run artifacts for audit trail and compare workflows.</li>
+<li>Treat outputs as planning analysis, not guarantees.</li>
+</ul>
+  </article>
+</main>
+</body>
+</html>
