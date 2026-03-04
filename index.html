@@ -183,6 +183,27 @@
     border-color: rgba(255,255,255,0.4);
   }
 
+  /* ── SECONDARY BUTTON ── */
+  .btn-secondary {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    background: transparent;
+    border: 1px solid rgba(200,169,110,0.4);
+    padding: 16px 36px;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: background 0.2s, border-color 0.2s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
+  }
+
   .coming-soon-note {
     font-family: var(--mono);
     font-size: 11px;
@@ -319,6 +340,105 @@
     font-weight: 500;
     color: var(--text);
     font-family: var(--sans);
+  }
+
+  /* ── TRIAL DOWNLOAD SECTION ── */
+  .trial-section {
+    padding: 80px 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg2);
+  }
+
+  .trial-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 48px;
+    text-align: center;
+  }
+
+  .trial-inner h2 {
+    margin-bottom: 16px;
+  }
+
+  .trial-desc {
+    font-size: 15px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    margin-bottom: 48px;
+    max-width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .trial-platforms {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+
+  .trial-platform {
+    background: var(--bg);
+    padding: 28px 20px;
+    text-decoration: none;
+    transition: background 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .trial-platform:hover {
+    background: var(--accent-glow);
+  }
+
+  .trial-platform-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .trial-platform-name {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-transform: uppercase;
+  }
+
+  .trial-platform-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.06em;
+  }
+
+  .trial-platform-dl {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .trial-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dimmer);
+    letter-spacing: 0.06em;
+    line-height: 1.8;
+  }
+
+  .trial-note a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .trial-note a:hover {
+    text-decoration: underline;
   }
 
   /* ── HERO CHART MOCKUP ── */
@@ -1279,6 +1399,8 @@
     .hero { padding: 120px 24px 60px; }
     .hero-inner { grid-template-columns: 1fr; gap: 48px; }
     .section-inner { padding: 0 24px; }
+    .trial-inner { padding: 0 24px; }
+    .trial-platforms { grid-template-columns: 1fr 1fr; }
     .diff-grid { grid-template-columns: 1fr; }
     .diff-item { border-right: none; }
     .features-layout { grid-template-columns: 1fr; }
@@ -1306,6 +1428,7 @@
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#methodology">Methodology</a></li>
+    <li><a href="#trial">Try Free</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="RetirementRiskLab_UserManual.html" target="_blank" rel="noopener">User Manual</a></li>
@@ -1329,11 +1452,8 @@
         <span class="pill">macOS + Windows + Linux soon</span>
       </div>
       <div class="hero-buy">
-        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-coming-soon" target="_blank" rel="noopener">Buy on Lemon Squeezy</a>
-        <div class="price-note">
-          <strong>$79</strong>
-          One-time · launch price
-        </div>
+        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-coming-soon" target="_blank" rel="noopener">Buy on Lemon Squeezy - $79</a>
+        <a href="#trial" class="btn-secondary">Try Free - 30 Days</a>
       </div>
       <div class="coming-soon-note">
         Instant download + separate license email from stillwardlabs.com.<br>
@@ -1695,6 +1815,46 @@ half-width = <span class="hl">±0.06 percentage points</span>
   </div>
 </section>
 
+<!-- TRIAL DOWNLOAD -->
+<section class="trial-section" id="trial">
+  <div class="trial-inner">
+    <div class="section-label" style="justify-content:center;">Try before you buy</div>
+    <h2>30-day free trial.<br><em>No account. No card.</em></h2>
+    <p class="trial-desc">Download, unzip, and run. The trial includes everything - full simulation, all outputs, Math Transparency, goal seek, compare runs. After 30 days, purchase activates the app offline from inside the app. No reinstall needed.</p>
+    <div class="trial-platforms">
+      <a href="https://github.com/stillward_labs/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-arm64.zip" class="trial-platform">
+        <span class="trial-platform-icon"></span>
+        <div class="trial-platform-name">macOS</div>
+        <div class="trial-platform-sub">Apple Silicon (ARM64)</div>
+        <div class="trial-platform-dl">Download</div>
+      </a>
+      <a href="https://github.com/stillward_labs/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-x64.zip" class="trial-platform">
+        <span class="trial-platform-icon"></span>
+        <div class="trial-platform-name">macOS</div>
+        <div class="trial-platform-sub">Intel (x64)</div>
+        <div class="trial-platform-dl">Download</div>
+      </a>
+      <a href="https://github.com/stillward_labs/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-x64.zip" class="trial-platform">
+        <span class="trial-platform-icon">⊞</span>
+        <div class="trial-platform-name">Windows</div>
+        <div class="trial-platform-sub">x64</div>
+        <div class="trial-platform-dl">Download</div>
+      </a>
+      <a href="https://github.com/stillward_labs/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-arm64.zip" class="trial-platform">
+        <span class="trial-platform-icon">⊞</span>
+        <div class="trial-platform-name">Windows</div>
+        <div class="trial-platform-sub">ARM64</div>
+        <div class="trial-platform-dl">Download</div>
+      </a>
+    </div>
+    <div class="trial-note">
+      Each package includes the app, user manual, and third-party notices.<br>
+      SHA-256 checksums available on the <a href="https://github.com/stillward_labs/RRLsite/releases/tag/trial-v1.0" target="_blank" rel="noopener">release page</a>.<br>
+      Ready to buy? <a href="https://retirementrisklab.lemonsqueezy.com" target="_blank" rel="noopener">Purchase on Lemon Squeezy - $79 one-time</a>
+    </div>
+  </div>
+</section>
+
 <!-- ACTIVATION -->
 <section class="activation-section">
   <div class="section-inner">
@@ -1703,18 +1863,18 @@ half-width = <span class="hl">±0.06 percentage points</span>
     <div class="activation-steps">
       <div class="activation-step">
         <div class="step-number">01</div>
-        <div class="step-title">Purchase on Lemon Squeezy</div>
-        <div class="step-body">One-time payment. You'll receive a download link and your license file by email.</div>
+        <div class="step-title">Download or purchase</div>
+        <div class="step-body">Try free for 30 days - download above. Or purchase on Lemon Squeezy for instant access and your license file by email.</div>
       </div>
       <div class="activation-step">
         <div class="step-number">02</div>
-        <div class="step-title">Download for your platform</div>
-        <div class="step-body">macOS, Windows x64, and Windows ARM64 builds included. Linux coming soon.</div>
+        <div class="step-title">Choose your platform</div>
+        <div class="step-body">macOS Apple Silicon, macOS Intel, Windows x64, and Windows ARM64 builds available. Linux coming soon.</div>
       </div>
       <div class="activation-step">
         <div class="step-number">03</div>
         <div class="step-title">Activate offline</div>
-        <div class="step-body">File → Enter License → Import the license file we send you. No network needed.</div>
+        <div class="step-body">After purchase: File → Enter License → Import the license file we send you. No network needed. Trial users run fully unlicensed for 30 days.</div>
       </div>
       <div class="activation-step">
         <div class="step-number">04</div>
@@ -1752,7 +1912,7 @@ half-width = <span class="hl">±0.06 percentage points</span>
           <li>Free updates within v1.x</li>
           <li>Email support</li>
         </ul>
-        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-coming-soon" style="width:100%;text-align:center;" target="_blank" rel="noopener">Buy now on Lemon Squeezy →</a>
+        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-buy" target="_blank" rel="noopener">Buy on Lemon Squeezy →</a>
         <div class="pricing-note">
           Introductory price for early adopters. Future price: $129.<br>
           Offline activation. No subscription.
@@ -1768,6 +1928,10 @@ half-width = <span class="hl">±0.06 percentage points</span>
     <div class="section-label">FAQ</div>
     <h2>Common questions</h2>
     <div class="faq-grid">
+      <div class="faq-item">
+        <div class="faq-q">Can I try it before buying?</div>
+        <div class="faq-a">Yes. Download the 30-day free trial above - no account, no credit card. The trial includes full simulation, all outputs, and every feature. After 30 days, activate with a purchased license from inside the app.</div>
+      </div>
       <div class="faq-item">
         <div class="faq-q">Can I reproduce an exact result?</div>
         <div class="faq-a">Yes. Set <code>Seed Mode = fixed</code> and the same seed value and you'll get bit-identical results on the same build and platform. Cross-platform differences can occur due to floating-point behavior.</div>
