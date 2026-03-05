@@ -162,14 +162,14 @@
     pointer-events: none;
   }
 
-  .btn-coming-soon {
+  .btn-primary-outline {
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.1em;
-    color: var(--text-dim);
+    color: var(--accent);
     background: transparent;
-    border: 1px solid rgba(255,255,255,0.15);
+    border: 1px solid rgba(200,169,110,0.5);
     padding: 16px 36px;
     text-transform: uppercase;
     display: inline-block;
@@ -178,9 +178,9 @@
     transition: border-color 0.2s, color 0.2s;
   }
 
-  .btn-coming-soon:hover {
-    color: var(--text);
-    border-color: rgba(255,255,255,0.4);
+  .btn-primary-outline:hover {
+    background: var(--accent-glow);
+    border-color: var(--accent);
   }
 
   /* ── SECONDARY BUTTON ── */
@@ -189,19 +189,19 @@
     font-size: 13px;
     font-weight: 500;
     letter-spacing: 0.1em;
-    color: var(--accent);
+    color: var(--text-dim);
     background: transparent;
-    border: 1px solid rgba(200,169,110,0.4);
+    border: 1px solid rgba(255,255,255,0.15);
     padding: 16px 36px;
     text-decoration: none;
     text-transform: uppercase;
-    transition: background 0.2s, border-color 0.2s;
+    transition: border-color 0.2s, color 0.2s;
     display: inline-block;
   }
 
   .btn-secondary:hover {
-    background: var(--accent-glow);
-    border-color: var(--accent);
+    color: var(--text);
+    border-color: rgba(255,255,255,0.4);
   }
 
   .coming-soon-note {
@@ -340,105 +340,6 @@
     font-weight: 500;
     color: var(--text);
     font-family: var(--sans);
-  }
-
-  /* ── TRIAL DOWNLOAD SECTION ── */
-  .trial-section {
-    padding: 80px 0;
-    border-top: 1px solid var(--border);
-    background: var(--bg2);
-  }
-
-  .trial-inner {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 48px;
-    text-align: center;
-  }
-
-  .trial-inner h2 {
-    margin-bottom: 16px;
-  }
-
-  .trial-desc {
-    font-size: 15px;
-    color: var(--text-dim);
-    line-height: 1.75;
-    margin-bottom: 48px;
-    max-width: 580px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .trial-platforms {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-bottom: 28px;
-  }
-
-  .trial-platform {
-    background: var(--bg);
-    padding: 28px 20px;
-    text-decoration: none;
-    transition: background 0.2s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .trial-platform:hover {
-    background: var(--accent-glow);
-  }
-
-  .trial-platform-icon {
-    font-size: 22px;
-    line-height: 1;
-  }
-
-  .trial-platform-name {
-    font-family: var(--mono);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    color: var(--text);
-    text-transform: uppercase;
-  }
-
-  .trial-platform-sub {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--text-dimmer);
-    letter-spacing: 0.06em;
-  }
-
-  .trial-platform-dl {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-
-  .trial-note {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text-dim);
-    letter-spacing: 0.06em;
-    line-height: 1.8;
-  }
-
-  .trial-note a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
-  .trial-note a:hover {
-    text-decoration: underline;
   }
 
   /* ── HERO CHART MOCKUP ── */
@@ -995,6 +896,145 @@
   }
 
   /* ── PRICING ── */
+  /* ── PRICING (two-column layout) ── */
+  .pricing-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+  }
+
+  .pricing-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pricing-headline {
+    font-family: var(--serif);
+    font-size: clamp(38px, 4vw, 56px);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--text);
+    margin-bottom: 36px;
+  }
+
+  .pricing-checklist {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+
+  .pricing-checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    font-size: 16px;
+    font-weight: 300;
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  .check-icon {
+    flex-shrink: 0;
+    color: var(--accent);
+    font-size: 14px;
+    margin-top: 2px;
+  }
+
+  .btn-buy-primary {
+    display: inline-block;
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--accent);
+    padding: 18px 40px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.15s;
+    margin-bottom: 16px;
+    width: fit-content;
+  }
+
+  .btn-buy-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  .pricing-footnote {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .trial-card {
+    background: #1c1f22;
+    border: 1px solid var(--border-bright);
+    border-radius: 16px;
+    padding: 40px;
+  }
+
+  .trial-card-header {
+    margin-bottom: 20px;
+  }
+
+  .trial-card-title {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--text);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .trial-card-subtitle {
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .trial-card-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 24px;
+  }
+
+  .trial-card-body {
+    font-size: 15px;
+    font-weight: 300;
+    color: var(--text-dim);
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+
+  .download-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .download-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 15px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border-bright);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text);
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .download-btn:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.22);
+  }
+
+  .dl-icon { opacity: 0.6; font-style: normal; }
+
   .pricing-section {
     padding: 100px 0;
     border-top: 1px solid var(--border);
@@ -1078,24 +1118,6 @@
     font-weight: 500;
     flex-shrink: 0;
   }
-
-  .btn-buy {
-    display: block;
-    width: 100%;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--bg);
-    background: var(--accent);
-    padding: 18px;
-    text-align: center;
-    text-decoration: none;
-    transition: opacity 0.2s;
-  }
-
-  .btn-buy:hover { opacity: 0.9; }
 
   .pricing-note {
     font-family: var(--mono);
@@ -1399,8 +1421,6 @@
     .hero { padding: 120px 24px 60px; }
     .hero-inner { grid-template-columns: 1fr; gap: 48px; }
     .section-inner { padding: 0 24px; }
-    .trial-inner { padding: 0 24px; }
-    .trial-platforms { grid-template-columns: 1fr 1fr; }
     .diff-grid { grid-template-columns: 1fr; }
     .diff-item { border-right: none; }
     .features-layout { grid-template-columns: 1fr; }
@@ -1415,8 +1435,8 @@
     .activation-step:nth-child(2) { border-right: none; }
     .screenshot-grid { grid-template-columns: 1fr; }
     footer { padding: 32px 24px; flex-direction: column; }
-    .pricing-header { flex-direction: column; gap: 16px; }
-    .pricing-amount { text-align: left; }
+    .pricing-layout { grid-template-columns: 1fr; gap: 40px; }
+    .btn-buy-primary { width: 100%; text-align: center; }
   }
 </style>
 </head>
@@ -1428,7 +1448,6 @@
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#methodology">Methodology</a></li>
-    <li><a href="#trial">Try Free</a></li>
     <li><a href="#pricing">Pricing</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="RetirementRiskLab_UserManual.html" target="_blank" rel="noopener">User Manual</a></li>
@@ -1449,11 +1468,11 @@
         <span class="pill">No cloud</span>
         <span class="pill">No telemetry</span>
         <span class="pill">Fixed-seed reproducibility</span>
-        <span class="pill">macOS + Windows + Linux soon</span>
+        <span class="pill">macOS + Windows</span>
       </div>
       <div class="hero-buy">
-        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-coming-soon" target="_blank" rel="noopener">Buy on Lemon Squeezy - $79</a>
-        <a href="#trial" class="btn-secondary">Try Free - 30 Days</a>
+        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-primary-outline" target="_blank" rel="noopener">Buy on Lemon Squeezy - $79</a>
+        <a href="#pricing" class="btn-secondary">Try Free - 30 Days</a>
       </div>
       <div class="coming-soon-note">
         Instant download + separate license email from stillwardlabs.com.<br>
@@ -1815,46 +1834,6 @@ half-width = <span class="hl">±0.06 percentage points</span>
   </div>
 </section>
 
-<!-- TRIAL DOWNLOAD -->
-<section class="trial-section" id="trial">
-  <div class="trial-inner">
-    <div class="section-label" style="justify-content:center;">Try before you buy</div>
-    <h2>30-day free trial.<br><em>No account. No card.</em></h2>
-    <p class="trial-desc">Download, unzip, and run. The trial includes everything - full simulation, all outputs, Math Transparency, goal seek, compare runs. After 30 days, purchase activates the app offline from inside the app. No reinstall needed.</p>
-    <div class="trial-platforms">
-      <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-arm64.zip" class="trial-platform">
-        <span class="trial-platform-icon"></span>
-        <div class="trial-platform-name">macOS</div>
-        <div class="trial-platform-sub">Apple Silicon (ARM64)</div>
-        <div class="trial-platform-dl">Download</div>
-      </a>
-      <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-x64.zip" class="trial-platform">
-        <span class="trial-platform-icon"></span>
-        <div class="trial-platform-name">macOS</div>
-        <div class="trial-platform-sub">Intel (x64)</div>
-        <div class="trial-platform-dl">Download</div>
-      </a>
-      <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-x64.zip" class="trial-platform">
-        <span class="trial-platform-icon">⊞</span>
-        <div class="trial-platform-name">Windows</div>
-        <div class="trial-platform-sub">x64</div>
-        <div class="trial-platform-dl">Download</div>
-      </a>
-      <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-arm64.zip" class="trial-platform">
-        <span class="trial-platform-icon">⊞</span>
-        <div class="trial-platform-name">Windows</div>
-        <div class="trial-platform-sub">ARM64</div>
-        <div class="trial-platform-dl">Download</div>
-      </a>
-    </div>
-    <div class="trial-note">
-      Each package includes the app, user manual, and third-party notices.<br>
-      SHA-256 checksums available on the <a href="https://github.com/ether-ore/RRLsite/releases/tag/trial-v1.0" target="_blank" rel="noopener">release page</a>.<br>
-      Ready to buy? <a href="https://retirementrisklab.lemonsqueezy.com" target="_blank" rel="noopener">Purchase on Lemon Squeezy - $79 one-time</a>
-    </div>
-  </div>
-</section>
-
 <!-- ACTIVATION -->
 <section class="activation-section">
   <div class="section-inner">
@@ -1864,12 +1843,12 @@ half-width = <span class="hl">±0.06 percentage points</span>
       <div class="activation-step">
         <div class="step-number">01</div>
         <div class="step-title">Download or purchase</div>
-        <div class="step-body">Try free for 30 days - download above. Or purchase on Lemon Squeezy for instant access and your license file by email.</div>
+        <div class="step-body">Try free for 30 days — no account, no card. Or purchase on Lemon Squeezy for instant access and your license file by email.</div>
       </div>
       <div class="activation-step">
         <div class="step-number">02</div>
         <div class="step-title">Choose your platform</div>
-        <div class="step-body">macOS Apple Silicon, macOS Intel, Windows x64, and Windows ARM64 builds available. Linux coming soon.</div>
+        <div class="step-body">macOS Apple Silicon, macOS Intel, Windows x64, and Windows ARM64 builds available.</div>
       </div>
       <div class="activation-step">
         <div class="step-number">03</div>
@@ -1888,36 +1867,50 @@ half-width = <span class="hl">±0.06 percentage points</span>
 <!-- PRICING -->
 <section class="pricing-section" id="pricing">
   <div class="section-inner">
-    <div class="section-label" style="justify-content:center;">Pricing</div>
-    <h2 style="text-align:center;">One price.<br><em>Everything included.</em></h2>
-    <div class="pricing-card">
-      <div class="pricing-header">
-        <div>
-          <div class="pricing-name">Retirement Risk Lab</div>
-          <div class="pricing-desc">Personal license · macOS + Windows</div>
-        </div>
-        <div class="pricing-amount">
-          <div class="pricing-price">$79</div>
-          <div class="pricing-period">One-time · launch price</div>
-        </div>
-      </div>
-      <div class="pricing-body">
-        <ul class="pricing-features">
-          <li>macOS, Windows x64, and Windows ARM64 downloads — Linux coming soon, free to existing buyers</li>
-          <li>Full simulation: annual and monthly timestep modes</li>
-          <li>Wilson CI, trial quality, Math Transparency on every run</li>
-          <li>Goal seek, compare runs, fan chart, path table, CSV export</li>
-          <li>Scenario and run artifact save/load (versioned JSON schemas)</li>
-          <li>Offline license activation — no network, no machine binding</li>
-          <li>Free updates within v1.x</li>
-          <li>Email support</li>
+    <div class="pricing-layout">
+
+      <!-- LEFT: headline + checklist + buy CTA -->
+      <div class="pricing-left">
+        <div class="section-label">Pricing</div>
+        <h2 class="pricing-headline">One price.<br>Everything included.</h2>
+        <ul class="pricing-checklist">
+          <li><span class="check-icon">✓</span> Lifetime license for Mac &amp; Windows</li>
+          <li><span class="check-icon">✓</span> Full simulation engine &amp; monthly timestep models</li>
+          <li><span class="check-icon">✓</span> Wilson CI, Math Transparency, goal seek, compare runs</li>
+          <li><span class="check-icon">✓</span> Free updates within v1.x</li>
+          <li><span class="check-icon">✓</span> Offline license activation — no telemetry, no machine binding</li>
+          <li><span class="check-icon">✓</span> Email support</li>
         </ul>
-        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-buy" target="_blank" rel="noopener">Buy on Lemon Squeezy →</a>
-        <div class="pricing-note">
-          Introductory price for early adopters. Future price: $129.<br>
-          Offline activation. No subscription.
-        </div>
+        <a href="https://retirementrisklab.lemonsqueezy.com" class="btn-buy-primary" target="_blank" rel="noopener">Buy License – $79</a>
+        <p class="pricing-footnote">Introductory price for early adopters. Future price: $129.<br>Offline activation. No subscription.</p>
       </div>
+
+      <!-- RIGHT: Trial card + download buttons -->
+      <div class="trial-card">
+        <div class="trial-card-header">
+          <div class="section-label" style="margin-bottom:12px;">Try before you buy</div>
+          <div class="trial-card-title">30-day Free Trial</div>
+          <div class="trial-card-subtitle">No account. No card required.</div>
+        </div>
+        <div class="trial-card-divider"></div>
+        <p class="trial-card-body">Download, unzip, and run. The trial includes everything — full simulation, all outputs, Math Transparency, goal seek, compare runs. After 30 days, purchase activates the app offline from inside the app. No reinstall needed.</p>
+        <div class="download-grid">
+          <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-arm64.zip" class="download-btn">
+            <i class="dl-icon">🍎</i> macOS (Apple Silicon)
+          </a>
+          <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-macOS-x64.zip" class="download-btn">
+            <i class="dl-icon">🍎</i> macOS (Intel)
+          </a>
+          <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-x64.zip" class="download-btn">
+            <i class="dl-icon">🪟</i> Windows x64
+          </a>
+          <a href="https://github.com/ether-ore/RRLsite/releases/download/trial-v1.0/RetirementRiskLab-trial-windows-arm64.zip" class="download-btn">
+            <i class="dl-icon">🪟</i> Windows ARM64
+          </a>
+        </div>
+        <p style="font-size:12px;color:var(--text-dim);margin-top:16px;font-family:var(--mono);">Each package includes the app, user manual, and third-party notices.<br>SHA-256 checksums available on the <a href="https://github.com/ether-ore/RRLsite/releases/tag/trial-v1.0" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;">release page</a>.</p>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1962,7 +1955,7 @@ half-width = <span class="hl">±0.06 percentage points</span>
       </div>
       <div class="faq-item">
         <div class="faq-q">What platforms are supported?</div>
-        <div class="faq-a">macOS and Windows (x64 and ARM64). All three builds are included with your purchase. A Linux build is in progress and will be distributed to existing buyers at no extra charge when available.</div>
+        <div class="faq-a">macOS and Windows (x64 and ARM64). All four builds are included with your purchase.</div>
       </div>
     </div>
   </div>
@@ -1972,7 +1965,7 @@ half-width = <span class="hl">±0.06 percentage points</span>
 <footer>
   <div class="footer-logo">Retirement Risk Lab</div>
   <ul class="footer-links">
-    <li><a href="mailto:support@stillwardlabs.com">Support</a></li>
+    <li><a href="/cdn-cgi/l/email-protection#7c0f090c0c130e083c0f081510100b1d0e18101d1e0f521f1311">Support</a></li>
     <li><a href="#faq">FAQ</a></li>
     <li><a href="RetirementRiskLab_UserManual.html" target="_blank" rel="noopener">User Manual</a></li>
     <li><a href="https://retirementrisklab.lemonsqueezy.com" target="_blank" rel="noopener">Buy Now</a></li>
@@ -1984,7 +1977,7 @@ half-width = <span class="hl">±0.06 percentage points</span>
   </div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   function switchTab(e, tabId) {
     e.preventDefault();
     // update nav
