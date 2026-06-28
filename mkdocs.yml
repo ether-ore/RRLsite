@@ -28,6 +28,9 @@ markdown_extensions:
   - tables
   - toc:
       permalink: true
+      # GitHub-compatible slugs so anchor links written for the
+      # canonical User Guide (rendered on GitHub) keep working here.
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
   - admonition
   - pymdownx.highlight
   - pymdownx.superfences
@@ -35,6 +38,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - User Guide: manual.md
+  - Privacy: privacy.md
 
 extra:
   social:
