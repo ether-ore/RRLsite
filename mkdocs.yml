@@ -1,0 +1,42 @@
+site_name: Retirement Risk Lab
+site_url: https://retirementrisklab.app/
+site_description: An offline Monte Carlo retirement simulator for macOS, iPadOS, and iPhone. Fixed-seed reproducibility, Wilson confidence intervals, and full math transparency on every run.
+site_author: stillward labs
+
+repo_url: https://github.com/ether-ore/RRLsite
+repo_name: ether-ore/RRLsite
+
+copyright: Copyright &copy; stillward labs
+
+theme:
+  name: material
+  palette:
+    scheme: default
+    primary: white
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.sections
+    - content.code.copy
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+markdown_extensions:
+  - tables
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ether-ore
