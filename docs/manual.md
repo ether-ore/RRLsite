@@ -308,7 +308,7 @@ These are starting points organized by **planning posture**. They're not prescri
 
 Every value below is sourced from the same datasets cited in the field-by-field guide (BLS for inflation, NYU Stern Damodaran for equity/bond returns, SSA for COLA, IRS for RMD rates, Fidelity 2024 study for taxes). See **[Sources](#sources)** for the underlying citations.
 
-For full *historical-era* stress-test scenarios (Stagflation, Great Depression, Long Bull Market, etc.) with mean/stddev/inflation combinations derived from the Shiller dataset, see **[Appendix A — Historical assumptions reference](#appendix-a--historical-assumptions-reference)** at the bottom of this document. This section is for everyday planning postures; the appendix is for era-specific stress tests.
+For full *historical-era* stress-test scenarios (Stagflation, Great Depression, Long Bull Market, etc.) with mean/stddev/inflation combinations derived from the Shiller dataset, see **[Historical assumptions reference](historical-assumptions.md)** (also reproduced as Appendix A at the bottom of this document). This section is for everyday planning postures; that one is for era-specific stress tests.
 
 ### Optimistic posture
 
@@ -456,6 +456,8 @@ If you find a number in this guide or the in-app tooltips that doesn't match the
 ---
 
 ## Appendix A — Historical assumptions reference
+
+*Also available as a standalone page at [Historical assumptions reference](historical-assumptions.md). Same content.*
 
 The Suggested settings section gave you postures organized by planning intent. This appendix gives you a different cut of the same problem: **what did each input value actually look like during specific historical regimes?** It exists so you can run an "if a Stagflation-style decade happened again, does my plan survive it?" check using inputs grounded in what actually happened, not a generic conservative posture.
 

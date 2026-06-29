@@ -42,6 +42,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - User Guide: manual.md
+  - Historical assumptions: historical-assumptions.md
   - Privacy: privacy.md
 
 plugins:

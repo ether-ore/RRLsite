@@ -22,9 +22,15 @@ This is the **public website** for Retirement Risk Lab. The product (app, engine
 - The app is **not yet on the App Store** as of the last edit of this file. Buttons must say "Coming soon to the App Store" — not "Download on the App Store" — until the developer updates this file to confirm a live URL exists.
 
 **On the canonical User Guide:**
-- The User Guide lives in **two** places: the canonical at `../RetirementRiskScenario/docs/user-guides/RetirementRiskLab_UserGuide.md`, and a mirror inside the app subtree at `../RetirementRiskScenario/ios/RRLApp/docs/user-guides/RetirementRiskLab_UserGuide.md`.
-- This site holds a **third** copy at `docs/manual.md` so users can read it on the web without having the app installed.
-- **When the canonical guide changes, the site copy needs to be refreshed.** Don't edit `docs/manual.md` independently — the only correct workflow is: edit canonical → mirror to app subtree → copy to this site's `docs/manual.md`.
+- The User Guide lives in **two** places upstream: the canonical at `../RetirementRiskScenario/docs/user-guides/RetirementRiskLab_UserGuide.md`, and a mirror inside the app subtree at `../RetirementRiskScenario/ios/RRLApp/docs/user-guides/RetirementRiskLab_UserGuide.md`.
+- This site holds a **third copy at `docs/manual.md`** so users can read it on the web without having the app installed.
+- **When the canonical guide changes, the site copy needs to be refreshed.** Don't rewrite `docs/manual.md` from scratch — the correct workflow is: edit canonical → mirror to app subtree → copy to this site's `docs/manual.md`.
+- **One narrow exception:** small, mechanical link/banner edits in `docs/manual.md` that exist only to integrate the doc with the website's navigation (e.g. swapping a same-document anchor link to a separate site page like `historical-assumptions.md`, or adding a "also available standalone" banner above a section that's also published at its own URL). These edits are website-only and stay here; the canonical doc in the app repo never carries them. Document any such edit at the top of this file under "Active Operational Notes" so a future refresh-from-canonical doesn't blow them away accidentally.
+
+**On the standalone Historical Assumptions page (`docs/historical-assumptions.md`):**
+- This page duplicates Appendix A of `docs/manual.md` so that "Stagflation Monte Carlo retirement" / "Shiller dataset returns" search queries land on a focused page with its own meta description and og_image.
+- The content is sourced from the canonical User Guide's Appendix A in the app repo. When the canonical Appendix A changes, BOTH `docs/manual.md` (whole-doc refresh) AND `docs/historical-assumptions.md` (lines below the page intro) need to be updated.
+- The page intro (frontmatter + H1 + the "This is also Appendix A" link line) is site-only and is NOT in the canonical guide; preserve it across refreshes.
 
 **On the privacy statement:**
 - `docs/privacy.md` describes what the app actually does. Before changing it, verify the app behavior in source. Don't promise behaviors that aren't implemented (e.g. don't add "no third-party analytics" if a third-party SDK is in fact present in the app build).
