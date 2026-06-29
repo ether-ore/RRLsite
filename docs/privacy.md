@@ -33,11 +33,19 @@ There are three narrow cases where data leaves your device, and in every case Ap
 
 ## Your scenarios are yours
 
-Your scenario data is yours. You can:
+Your scenario data is yours. What you can do with it depends on which tier you're on. *(See the [Free vs Lifetime Unlock comparison](index.md#free-or-lifetime--your-call) on the home page for the full feature split.)*
 
-- **Export it.** Settings → Scenario Backup → Export creates a JSON file containing all your named scenarios. You can keep that file, move it to another device, or use it as a backup.
-- **Delete it.** Delete a named scenario from the Library and it's gone from your device. If iCloud sync is on, the deletion propagates to your other devices via CloudKit.
-- **Disconnect from iCloud.** Turn iCloud sync off in Settings and the app stops syncing immediately. Existing local data is unaffected. To purge what's already in iCloud, sign out of iCloud at the OS level (Settings → [Your Name] → iCloud) and delete the app's iCloud data via Apple's standard iCloud management tools.
+**As a Free user** the app holds exactly one scratch draft — the scenario currently on the form. It lives in local app storage on your device.
+
+- **Edit it.** Just change the form. The draft auto-saves continuously.
+- **Reset it.** There is no in-app "delete draft" button by design (the form always has *something* to show); to wipe it, delete and reinstall the app, which also clears any other local state.
+- There is no iCloud sync and no named scenario library on the Free tier, so there is nothing to disconnect from iCloud and nothing to export to a backup file.
+
+**As a Lifetime Unlock user** the app also keeps your named scenario library — every "Retire at 60" / "Retire at 65" / etc. you've saved, optionally synced via iCloud.
+
+- **Export it (Lifetime Unlock).** Settings → Scenario Backup → Export creates a JSON file containing all your named scenarios and their last results. You can keep that file, move it to another device, or use it as a backup.
+- **Delete it (Lifetime Unlock).** Delete a named scenario from the Library and it's gone from your device. If iCloud sync is on, the deletion propagates to your other devices via CloudKit.
+- **Disconnect from iCloud (Lifetime Unlock).** Turn iCloud sync off in Settings and the app stops syncing immediately. Existing local data is unaffected. To purge what's already in iCloud, sign out of iCloud at the OS level (Settings → [Your Name] → iCloud) and delete the app's iCloud data via Apple's standard iCloud management tools.
 
 ## Third-party services
 

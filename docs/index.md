@@ -1,10 +1,12 @@
 ---
 hide:
-  - navigation
   - toc
 ---
 
-# Retirement Risk Lab
+<div class="hero-heading">
+  <img src="assets/branding/logo.png" alt="Retirement Risk Lab logo" class="hero-heading__logo skip-lightbox">
+  <h1 class="hero-heading__title">Retirement Risk Lab</h1>
+</div>
 
 **An offline Monte Carlo retirement simulator for Mac, iPad, and iPhone.**
 
@@ -55,27 +57,78 @@ The randomness comes from one place — the per-year return draw — so a lucky 
 
 The app is universal: **macOS 14+ on Mac, iPadOS 17+ on iPad, iOS 17+ on iPhone.** Same simulation engine, same numbers, layout adapted to each screen.
 
-### On Mac
+Click any screenshot to see it at full size.
 
-![Mac App Store screenshot 1](assets/macos/01_input.png){ loading=lazy }
-![Mac App Store screenshot 2](assets/macos/02_survival.png){ loading=lazy }
-![Mac App Store screenshot 3](assets/macos/03_balance.png){ loading=lazy }
-![Mac App Store screenshot 4](assets/macos/04_math.png){ loading=lazy }
-![Mac App Store screenshot 5](assets/macos/05_goalseek.png){ loading=lazy }
+=== "Mac"
 
-### On iPad
+    <figure class="platform-shot-figure">
+      <img src="assets/macos/01_input.png" alt="Input form" class="platform-shot platform-shot--landscape" loading="lazy">
+      <figcaption><strong>Input form.</strong> Age, balance, spending, contributions, return assumptions, taxes, RMDs. The starting point for every scenario.</figcaption>
+    </figure>
 
-![iPad input form](assets/ipad/01_input.png){ loading=lazy width=400 }
-![iPad survival chart](assets/ipad/02_survival.png){ loading=lazy width=400 }
-![iPad balance range](assets/ipad/03_balance.png){ loading=lazy width=400 }
-![iPad math transparency](assets/ipad/04_math.png){ loading=lazy width=400 }
+    <figure class="platform-shot-figure">
+      <img src="assets/macos/02_survival.png" alt="Survival by Age chart" class="platform-shot platform-shot--landscape" loading="lazy">
+      <figcaption><strong>Survival by Age.</strong> The probability your portfolio is still solvent at each age, with the 95% confidence band shaded around it.</figcaption>
+    </figure>
 
-### On iPhone
+    <figure class="platform-shot-figure">
+      <img src="assets/macos/03_balance.png" alt="Balance Range fan chart" class="platform-shot platform-shot--landscape" loading="lazy">
+      <figcaption><strong>Balance Range.</strong> Lucky (p90), typical (p50), and unlucky (p10) portfolio balance paths over the full simulation horizon.</figcaption>
+    </figure>
 
-![iPhone input form](assets/iphone/01_input.png){ loading=lazy width=240 }
-![iPhone survival chart](assets/iphone/02_survival.png){ loading=lazy width=240 }
-![iPhone balance range](assets/iphone/03_balance.png){ loading=lazy width=240 }
-![iPhone math transparency](assets/iphone/04_math.png){ loading=lazy width=240 }
+    <figure class="platform-shot-figure">
+      <img src="assets/macos/04_math.png" alt="Math Transparency tab" class="platform-shot platform-shot--landscape" loading="lazy">
+      <figcaption><strong>Math Transparency.</strong> The exact formulas, locked operation order, and a worked example with your actual inputs substituted in. Auditable.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/macos/05_goalseek.png" alt="Goal Seek result" class="platform-shot platform-shot--landscape" loading="lazy">
+      <figcaption><strong>Goal Seek.</strong> Pick a target survival probability and the app solves for the spending or savings level that hits it (Lifetime Unlock).</figcaption>
+    </figure>
+
+=== "iPad"
+
+    <figure class="platform-shot-figure">
+      <img src="assets/ipad/01_input.png" alt="Input form" class="platform-shot platform-shot--portrait" loading="lazy">
+      <figcaption><strong>Input form.</strong> Age, balance, spending, contributions, return assumptions, taxes, RMDs. The starting point for every scenario.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/ipad/02_survival.png" alt="Survival by Age chart" class="platform-shot platform-shot--portrait" loading="lazy">
+      <figcaption><strong>Survival by Age.</strong> The probability your portfolio is still solvent at each age, with the 95% confidence band shaded around it.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/ipad/03_balance.png" alt="Balance Range fan chart" class="platform-shot platform-shot--portrait" loading="lazy">
+      <figcaption><strong>Balance Range.</strong> Lucky (p90), typical (p50), and unlucky (p10) portfolio balance paths over the full simulation horizon.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/ipad/04_math.png" alt="Math Transparency tab" class="platform-shot platform-shot--portrait" loading="lazy">
+      <figcaption><strong>Math Transparency.</strong> The exact formulas, locked operation order, and a worked example with your actual inputs substituted in. Auditable.</figcaption>
+    </figure>
+
+=== "iPhone"
+
+    <figure class="platform-shot-figure">
+      <img src="assets/iphone/01_input.png" alt="Input form" class="platform-shot platform-shot--phone" loading="lazy">
+      <figcaption><strong>Input form.</strong> Age, balance, spending, contributions, return assumptions, taxes, RMDs. The starting point for every scenario.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/iphone/02_survival.png" alt="Survival by Age chart" class="platform-shot platform-shot--phone" loading="lazy">
+      <figcaption><strong>Survival by Age.</strong> The probability your portfolio is still solvent at each age, with the 95% confidence band shaded around it.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/iphone/03_balance.png" alt="Balance Range fan chart" class="platform-shot platform-shot--phone" loading="lazy">
+      <figcaption><strong>Balance Range.</strong> Lucky (p90), typical (p50), and unlucky (p10) portfolio balance paths over the full simulation horizon.</figcaption>
+    </figure>
+
+    <figure class="platform-shot-figure">
+      <img src="assets/iphone/04_math.png" alt="Math Transparency tab" class="platform-shot platform-shot--phone" loading="lazy">
+      <figcaption><strong>Math Transparency.</strong> The exact formulas, locked operation order, and a worked example with your actual inputs substituted in. Auditable.</figcaption>
+    </figure>
 
 ---
 
@@ -90,14 +143,16 @@ The simulator is **fully free for the core question**: will my money last to age
 | Headline survival probability + 95% CI | ✓ | ✓ |
 | Survival, Balance Range, Path Table, Math tabs | ✓ | ✓ |
 | Up to **5,000 trials** per run | ✓ | ✓ |
-| **Named scenario library** (Save / Load) | | ✓ |
+| Current scenario auto-saves between launches (one scratch draft) | ✓ | ✓ |
+| **Named scenario library** — save and reload as many "Retire at 60" / "Retire at 65" scenarios as you want | | ✓ |
 | **iCloud sync** across your devices | | ✓ |
 | **Compare two scenarios** — overlay survival curves | | ✓ |
 | **Goal Seek** — solve for the spending or savings level that hits your target | | ✓ |
 | **Monthly timestep** — resolve depletion month, not just year | | ✓ |
-| Up to **2,000,000 annual / 410,000 monthly** trials | | ✓ |
+| Up to **2,000,000 trials annually / 410,000 monthly** | | ✓ |
 | **Adjustable confidence level** — 80% / 90% / 95% / 99% | | ✓ |
 | **Path CSV export** for downstream analysis | | ✓ |
+| **Scenario backup** — export and re-import your saved scenarios as JSON | | ✓ |
 
 **Lifetime Unlock is a one-time $24.99 purchase** (US storefront — local pricing varies). **Family Sharing is enabled**, so the unlock covers everyone in your Family Sharing group at no extra cost. No subscription. No recurring charges.
 

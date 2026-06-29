@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{#
+  Site-wide SEO and social-preview metadata. This block runs on every
+  rendered page; the per-page title and description come from MkDocs's
+  built-in handling, but the social-card image, OG/Twitter tags, and
+  JSON-LD structured data live here.
+
+  Per-page tweaks: set `og_image`, `og_image_alt`, or `og_type` in a
+  page's front matter to override the defaults below.
+#}
+
+{% block extrahead %}
+  {% set page_meta = (page and page.meta) or {} %}
+  {% set is_home = page and page.is_homepage %}
+  {% set og_image = page_meta.og_image or 'assets/macos/03_balance.png' %}
+  {% set og_image_alt = page_meta.og_image_alt or 'Retirement Risk Lab Balance Range fan chart' %}
+  {% set default_title = 'Retirement Risk Lab — Offline Monte Carlo Retirement Simulator' %}
+  {% set page_title = (page.title ~ ' — Retirement Risk Lab') if (page and page.title and not is_home) else default_title %}
+  {% set default_desc = 'Fixed-seed reproducibility, Wilson 95% CI on every estimate, full math transparency. Not a calculator — a simulation lab. Offline, private, yours. For Mac, iPad, and iPhone.' %}
+  {% set page_desc = page_meta.description or default_desc %}
+  {% set page_url = (page and page.canonical_url) or 'https://retirementrisklab.app/' %}
+
+  {# --- Generic SEO --- #}
+  <meta name="keywords" content="retirement simulator, Monte Carlo retirement, retirement planning app, retirement calculator, retirement risk, safe withdrawal rate, DIY retirement planning, sequence of returns risk, FIRE planner, iOS retirement app, Mac retirement app">
+  <meta name="robots" content="index, follow">
+
+  {# --- Open Graph (Facebook / LinkedIn / iMessage / Slack previews) --- #}
+  <meta property="og:type" content="{{ page_meta.og_type or 'website' }}">
+  <meta property="og:site_name" content="Retirement Risk Lab">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:url" content="{{ page_url }}">
+  <meta property="og:title" content="{{ page_title }}">
+  <meta property="og:description" content="{{ page_desc }}">
+  <meta property="og:image" content="https://retirementrisklab.app/{{ og_image }}">
+  <meta property="og:image:alt" content="{{ og_image_alt }}">
+
+  {# --- Twitter / X card --- #}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title }}">
+  <meta name="twitter:description" content="{{ page_desc }}">
+  <meta name="twitter:image" content="https://retirementrisklab.app/{{ og_image }}">
+
+  {# --- JSON-LD structured data — SoftwareApplication --- #}
+  {% if is_home %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Retirement Risk Lab",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "macOS, iPadOS, iOS",
+    "description": "Offline Monte Carlo retirement simulator with fixed-seed reproducibility, Wilson 95% confidence intervals, and full math transparency on every run. Universal app for Mac, iPad, and iPhone.",
+    "url": "https://retirementrisklab.app/",
+    "image": "https://retirementrisklab.app/assets/macos/03_balance.png",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free tier",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "name": "Lifetime Unlock",
+        "price": "24.99",
+        "priceCurrency": "USD"
+      }
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "stillward labs"
+    }
+  }
+  </script>
+  {% endif %}
+{% endblock %}
