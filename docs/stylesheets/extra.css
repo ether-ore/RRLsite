@@ -1,0 +1,88 @@
+/* Custom styles for the RRL site. Keep this file small and focused. */
+
+/* Home-page hero heading: app icon next to the H1 title.
+   The image keeps its own square aspect ratio; the title sits
+   vertically centered next to it. On very narrow screens
+   (phones in portrait) the row wraps to stack. */
+.hero-heading {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0 0 0.5rem 0;
+    flex-wrap: wrap;
+}
+
+.hero-heading__logo {
+    width: 88px;
+    height: 88px;
+    border-radius: 18px;       /* match Apple's app-icon rounding feel */
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+    flex-shrink: 0;
+}
+
+.hero-heading__title {
+    margin: 0;
+    line-height: 1.1;
+}
+
+
+/* Figure wrapping each platform screenshot, with a caption below.
+   The caption text is identical across the Mac / iPad / iPhone
+   tabs for a given screenshot index; only the underlying image
+   changes. */
+.platform-shot-figure {
+    margin: 2rem auto;
+    max-width: 100%;
+    text-align: center;
+}
+
+.platform-shot-figure figcaption {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    color: var(--md-default-fg-color--light);
+    line-height: 1.5;
+    max-width: 60ch;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+/* Platform screenshots inside the Mac / iPad / iPhone tabs.
+   Three aspect ratios are very different (Mac 16:9 landscape,
+   iPad 3:4 portrait, iPhone ~9:19.5 portrait), so we constrain
+   by max-height instead of width so each shot occupies similar
+   vertical screen real estate. Centered in the content column
+   with consistent vertical spacing between shots. */
+.platform-shot {
+    display: block;
+    margin: 1.5rem auto;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+}
+
+/* Landscape (Mac): cap width so the 1920x1080 PNG doesn't span
+   the full content column on wide displays. */
+.platform-shot--landscape {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+}
+
+/* iPad portrait: cap height so the 2064x2752 PNG (3:4) renders
+   at a comfortable on-screen size. The width will scale from
+   the aspect ratio automatically. */
+.platform-shot--portrait {
+    max-height: 720px;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}
+
+/* iPhone portrait: narrower cap so the phone shots look
+   like phones, not stretched-out windows. */
+.platform-shot--phone {
+    max-height: 720px;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+}

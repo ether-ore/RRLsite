@@ -1,0 +1,67 @@
+site_name: Retirement Risk Lab
+site_url: https://retirementrisklab.app/
+site_description: Offline Monte Carlo retirement simulator for Mac, iPad, and iPhone. Estimate the probability your money lasts to age N with fixed-seed reproducibility, Wilson 95% confidence intervals, and full math transparency on every run. Universal app for analytical DIY planners.
+site_author: stillward labs
+
+copyright: Copyright &copy; stillward labs
+
+theme:
+  name: material
+  custom_dir: overrides
+  logo: assets/branding/logo.png
+  favicon: assets/branding/logo.png
+  palette:
+    scheme: default
+    primary: white
+    accent: blue
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.sections
+    - content.code.copy
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+markdown_extensions:
+  - tables
+  - attr_list
+  - toc:
+      permalink: true
+      # GitHub-compatible slugs so anchor links written for the
+      # canonical User Guide (rendered on GitHub) keep working here.
+      slugify: !!python/object/apply:pymdownx.slugs.slugify {kwds: {case: lower}}
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+
+nav:
+  - Home: index.md
+  - User Guide: manual.md
+  - Privacy: privacy.md
+
+plugins:
+  - search
+  - glightbox:
+      touchNavigation: true
+      loop: false
+      effect: zoom
+      slide_effect: slide
+      width: auto
+      height: auto
+      zoomable: true
+      draggable: true
+      skip_classes:
+        - skip-lightbox
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ether-ore

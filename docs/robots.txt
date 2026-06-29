@@ -1,0 +1,14 @@
+# https://www.robotstxt.org/robotstxt.html
+# Retirement Risk Lab — Offline Monte Carlo Retirement Simulator
+#
+# We index everything that's published. The repo also contains an
+# archive/ folder with the previous hand-built site, but mkdocs never
+# copies it into the deployed site/, so there is nothing under
+# /archive/ to crawl. The Disallow below is belt-and-suspenders in
+# case the repo layout changes later.
+
+User-agent: *
+Allow: /
+Disallow: /archive/
+
+Sitemap: https://retirementrisklab.app/sitemap.xml
